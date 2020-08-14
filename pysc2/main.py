@@ -4,8 +4,11 @@ from copy import deepcopy
 import torch as th
 from Gen_utils.logging import get_logger
 import yaml
-
 from pysc2.tests import run as Run
+
+
+algorithm_config_name = 'coma'
+
 
 logger = get_logger()
 
@@ -62,7 +65,7 @@ with open(config_dir2.format('config','envs', "{}.yaml".format('sc2')), "r") as 
 
 alg_config = None
 
-with open(config_dir2.format('config','algs', "{}.yaml".format('coma')), "r") as f:
+with open(config_dir2.format('config','algs', "{}.yaml".format(algorithm_config_name)), "r") as f:
     try:
         config_dict2 = yaml.load(f)
     except yaml.YAMLError as exc:
