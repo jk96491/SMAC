@@ -23,6 +23,8 @@ C:\Program Files (x86)\StarCraft II\Maps\SMAC_Maps
  ```shell
 pip install -r requirements.txt
 ```
+안타깝게도 아래 두가지는 직접 설치 해야 합니다.(어렵지 않습니다.)
+
 cloudpickle을 설치 해야 합니다.
  ```shell
 pip install cloudpickle을
