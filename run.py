@@ -16,7 +16,7 @@ from components.episode_buffer import ReplayBuffer
 from components.transforms import OneHot
 
 
-def run(_run, _config, _log):
+def run(_config, _log):
 
     # check args sanity
     _config = args_sanity_check(_config, _log)
@@ -40,9 +40,6 @@ def run(_run, _config, _log):
         tb_logs_direc = os.path.join(dirname(dirname(abspath(__file__))), "results", "tb_logs")
         tb_exp_direc = os.path.join(tb_logs_direc, "{}").format(unique_token)
         logger.setup_tb(tb_exp_direc)
-
-    # sacred is on by default
-    logger.setup_sacred(_run)
 
     # Run and train
     run_sequential(args=args, logger=logger)
