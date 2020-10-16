@@ -4,12 +4,21 @@
 - The results in SMAC (https://arxiv.org/abs/1902.04043) use SC2.4.6.2.69232 not SC2.4.10.
 ```
 # 스타크래프트2 멀티 에이전트 챌린지
+본 자료는 Windows 운영체제에서 편리하게 실행하기 위해 편집한 자료 입니다.
+
  우선적으로 필요한 패키지 설치를 위해 아래와 같이 명령을 넣어 주세요
  ```shell
 pip install -r requirements.txt
 ```
-
-
+cloudpickle을 설치 해야 합니다.
+ ```shell
+pip install cloudpickle을
+```
+pytorch도 설치해야 합니다.
+ ```shell
+conda install pytorch==1.2.0 torchvision==0.4.0 -c pytorch
+```
+마지막으로 main.py를 실행 하시면 됩니다.
 
 # Python MARL framework
 
