@@ -27,7 +27,7 @@ pip install -r requirements.txt
 
 cloudpickle을 설치 해야 합니다.
  ```shell
-pip install cloudpickle을
+pip install cloudpickle
 ```
 pytorch도 설치해야 합니다.
  ```shell
