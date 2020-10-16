@@ -9,7 +9,9 @@
 가장 먼저 스타크래프트2 게임을 설치 하여야 합니다. 체험판도 상관 없습니다.
 설치 후 아래 링크에서 미니게임에 필요한 맵을 다운로드 받아야 합니다.
 https://github.com/jk96491/SMAC/tree/master/pysc2/env/starcraft2/maps/SMAC_Maps
+
 다운 받은 파일을 아래 경로에 모두 옮겨 주시면 됩니다.
+
 C:\Program Files (x86)\StarCraft II\Maps\SMAC_Maps
 
 # 이제부터는 환경 설정입니다.
