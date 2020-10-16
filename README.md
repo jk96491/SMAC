@@ -3,6 +3,13 @@
 - Performance is *not* always comparable between versions. 
 - The results in SMAC (https://arxiv.org/abs/1902.04043) use SC2.4.6.2.69232 not SC2.4.10.
 ```
+# 스타크래프트2 멀티 에이전트 챌린지
+ 우선적으로 필요한 패키지 설치를 위해 아래와 같이 명령을 넣어 주세요
+ ```shell
+pip install -r requirements.txt
+```
+
+
 
 # Python MARL framework
 
