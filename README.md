@@ -8,9 +8,9 @@
 
 <img src="https://user-images.githubusercontent.com/17878413/97562077-72142600-1a24-11eb-962c-39df6423ced4.png" width="20%"></img>
 
-<img src="https://user-images.githubusercontent.com/17878413/97562396-e8b12380-1a24-11eb-92ba-c9a05ec3630b.png" width="50%"></img>
+<img src="https://user-images.githubusercontent.com/17878413/97562396-e8b12380-1a24-11eb-92ba-c9a05ec3630b.png" width="30%"></img>
 
-<img src="https://user-images.githubusercontent.com/17878413/97562276-b69fc180-1a24-11eb-997c-e5feeff6a30b.png" width="50%"></img>
+<img src="https://user-images.githubusercontent.com/17878413/97562276-b69fc180-1a24-11eb-997c-e5feeff6a30b.png" width="30%"></img>
 
 
 가장 먼저 스타크래프트2 게임을 설치 하여야 합니다. 체험판도 상관 없습니다. 아래 링크에서 다운 받으세요
