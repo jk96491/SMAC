@@ -1,0 +1,31 @@
+action_selector: "multinomial"
+epsilon_start:  0.5
+epsilon_finish: .01
+epsilon_anneal_time: 50000
+mask_before_softmax: False
+
+runner: "parallel"
+
+buffer_size: 4
+batch_size_run: 4
+batch_size: 4
+
+env_args:
+  state_last_action: False # critic adds last action internally
+
+# update the target network every {} training steps
+target_update_interval: 200
+
+lr: 0.0005
+critic_lr: 0.0005
+td_lambda: 0.8
+
+agent_output_type: "pi_logits"
+learner: "liir_learner"
+
+name: "liir_smac"
+
+
+hypernet_embed: 128
+mixing_embed_dim: 32
+softmax_mixing_weights: True
