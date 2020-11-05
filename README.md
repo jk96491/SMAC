@@ -1,10 +1,5 @@
-```diff
-- Please pay attention to the version of SC2 you are using for your experiments. 
-- Performance is *not* always comparable between versions. 
-- The results in SMAC (https://arxiv.org/abs/1902.04043) use SC2.4.6.2.69232 not SC2.4.10.
-```
-# 스타크래프트2 멀티 에이전트 챌린지
-본 자료는 Windows 운영체제에서 편리하게 실행하기 위해 편집한 자료 입니다.
+# StarCraft II Multi Agent Challenge
+This repository has been edited for convenient execution in Windows operating system.
 
 <img src="https://user-images.githubusercontent.com/17878413/97562077-72142600-1a24-11eb-962c-39df6423ced4.png" width="20%"></img>
 
@@ -13,34 +8,40 @@
 <img src="https://user-images.githubusercontent.com/17878413/97562276-b69fc180-1a24-11eb-997c-e5feeff6a30b.png" width="30%"></img>
 
 
-가장 먼저 스타크래프트2 게임을 설치 하여야 합니다. 체험판도 상관 없습니다. 아래 링크에서 다운 받으세요
-
+First you need to install the StarCraft 2 game. Trial version does not matter. Download it from the link below
+ 
+ ```shell
 https://starcraft2.com/ko-kr/
+```
 
-설치 후 아래 링크에서 미니게임에 필요한 맵을 다운로드 받아야 합니다.
+After installation, you should download the map required for the minigame from the link below.
 
+ ```shell
 https://github.com/oxwhirl/smac/tree/master/smac/env/starcraft2/maps/SMAC_Maps
+```
 
-다운 받은 파일을 아래 경로에 모두 옮겨 주시면 됩니다.
+You can move all downloaded files to the path below.
 
+ ```shell
 C:\Program Files (x86)\StarCraft II\Maps\SMAC_Maps
+```
 
-# 이제부터는 환경 설정입니다.
-우선적으로 필요한 패키지 설치를 위해 아래와 같이 명령을 넣어 주세요
+# From now on, this is the environment setting.
+Enter the following command to install the packages you need first.
  ```shell
 pip install -r requirements.txt
 ```
-안타깝게도 아래 두가지는 직접 설치 해야 합니다.(어렵지 않습니다.)
+Unfortunately, you need to install the two below yourself (it is not difficult).
 
-cloudpickle을 설치 해야 합니다.
+You need to install cloudpickle.
  ```shell
 pip install cloudpickle
 ```
-pytorch도 설치해야 합니다.
+You also need to install pytorch.
  ```shell
 conda install pytorch==1.2.0 torchvision==0.4.0 -c pytorch
 ```
-마지막으로 main.py를 실행 하시면 됩니다.
+Finally, run "main.py"
 
 # Python MARL framework
 
