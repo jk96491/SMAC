@@ -19,6 +19,9 @@ class Logger:
         self.tb_logger = log_value
         self.use_tb = True
 
+        from tensorboardX import SummaryWriter
+        self.writer = SummaryWriter(directory_name + "-latent")
+
     def setup_sacred(self, sacred_run_dict):
         return
         self.sacred_info = sacred_run_dict.info
@@ -37,6 +40,10 @@ class Logger:
             else:
                 self.sacred_info["{}_T".format(key)] = [t]
                 self.sacred_info[key] = [value]
+
+    def log_vec(self, mat, metadata, global_step, tag):
+        if self.use_tb:
+            self.writer.add_embedding(mat, metadata, global_step=global_step, tag=tag)
 
     def print_recent_stats(self):
         log_str = "Recent Stats | t_env: {:>10} | Episode: {:>8}\n".format(*self.stats["episode"][-1])

@@ -52,6 +52,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="latent_ce_dis_rnn_agent" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="pymarl-master" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/modules/agents" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/modules/agents/latent_ce_dis_rnn_agent.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pymarl-master" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -97,6 +118,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main (1)" />
+        <item itemvalue="Python.latent_ce_dis_rnn_agent" />
         <item itemvalue="Python.__init__" />
         <item itemvalue="Python.main" />
       </list>
@@ -116,49 +138,42 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
+    <state width="1575" height="466" key="DebuggerActiveHint" timestamp="1605064233036">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1575" height="466" key="DebuggerActiveHint/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605064233036" />
     <state x="688" y="137" key="FileChooserDialogImpl" timestamp="1603948619521">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1602847012567" />
     <state x="688" y="137" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1603948619521" />
-    <state width="1899" height="282" key="GridCell.Tab.0.bottom" timestamp="1603972209381">
+    <state width="1899" height="291" key="GridCell.Tab.0.bottom" timestamp="1605064349643">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1603972209381" />
-    <state width="1899" height="282" key="GridCell.Tab.0.center" timestamp="1603972209381">
+    <state width="1899" height="291" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605064349643" />
+    <state width="1899" height="291" key="GridCell.Tab.0.center" timestamp="1605064349642">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1603972209381" />
-    <state width="1899" height="282" key="GridCell.Tab.0.left" timestamp="1603972209381">
+    <state width="1899" height="291" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605064349642" />
+    <state width="1899" height="291" key="GridCell.Tab.0.left" timestamp="1605064349641">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1603972209381" />
-    <state width="1899" height="282" key="GridCell.Tab.0.right" timestamp="1603972209381">
+    <state width="1899" height="291" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605064349641" />
+    <state width="1899" height="291" key="GridCell.Tab.0.right" timestamp="1605064349643">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="282" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1603972209381" />
+    <state width="1899" height="291" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605064349643" />
     <state x="461" y="162" key="SettingsEditor" timestamp="1602845850059">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="162" key="SettingsEditor/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1602845850059" />
-    <state x="1920" y="0" width="1590" height="1027" key="dock-window-1" timestamp="1603971871023">
+    <state x="1920" y="64" width="1590" height="717" maximized="true" key="dock-window-1" timestamp="1605062552203">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
-    <state x="1920" y="0" width="1590" height="1027" key="dock-window-1/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1603971871023" />
+    <state x="1920" y="64" width="1590" height="717" maximized="true" key="dock-window-1/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605062552203" />
     <state x="653" y="251" width="613" height="538" key="find.popup" timestamp="1603510752891">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="653" y="251" width="613" height="538" key="find.popup/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1603510752891" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/run.py</url>
-          <line>175</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

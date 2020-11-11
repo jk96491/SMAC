@@ -18,7 +18,7 @@ minigame 설정 가이드
 
 if __name__ == '__main__':
     logger = get_logger()
-    algorithm = 'liir_smac'
+    algorithm = 'qmix_smac_latent'
     minigame = '2s3z'
 
     config = cu.config_copy(cu.get_config(algorithm, minigame))
