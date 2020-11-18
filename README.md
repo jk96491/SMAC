@@ -51,6 +51,9 @@ PyMARL is [WhiRL](http://whirl.cs.ox.ac.uk)'s framework for deep multi-agent rei
 - [**VDN**: Value-Decomposition Networks For Cooperative Multi-Agent Learning](https://arxiv.org/abs/1706.05296) 
 - [**IQL**: Independent Q-Learning](https://arxiv.org/abs/1511.08779)
 - [**QTRAN**: QTRAN: Learning to Factorize with Transformation for Cooperative Multi-Agent Reinforcement Learning](https://arxiv.org/abs/1905.05408)
+- [**LIIR**: LIIR: Learning Individual Intrinsic Reward in Multi-Agent Reinforcement Learning](https://papers.nips.cc/paper/2019/file/07a9d3fed4c5ea6b17e80258dee231fa-Paper.pdf)
+- [**ROMA**: ROMA: Multi-Agent Reinforcement Learning with Emergent Roles](https://arxiv.org/abs/2003.08039)
+- [**RODE**: RODE: Learning Roles to Decompose Multi-Agent Tasks](https://arxiv.org/abs/2010.01523)
 
 PyMARL is written in PyTorch and uses [SMAC](https://github.com/oxwhirl/smac) as its environment.
 
