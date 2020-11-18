@@ -5,3 +5,9 @@ REGISTRY["episode"] = EpisodeRunner
 
 from .parallel_runner import ParallelRunner
 REGISTRY["parallel"] = ParallelRunner
+
+from .episode_runner_V2 import EpisodeRunnerV2
+REGISTRY["episode_V2"] = EpisodeRunnerV2
+
+from .parallel_runner_V2 import ParallelRunnerV2
+REGISTRY["parallel_V2"] = ParallelRunnerV2

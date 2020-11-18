@@ -21,7 +21,7 @@ class LatentCEDisRNNAgent(nn.Module):
 
         self.embed_fc_input_size = input_shape
         NN_HIDDEN_SIZE = args.NN_HIDDEN_SIZE
-        activation_func=nn.LeakyReLU()
+        activation_func = nn.LeakyReLU()
 
         self.embed_net = nn.Sequential(nn.Linear(self.embed_fc_input_size, NN_HIDDEN_SIZE),
                                        nn.BatchNorm1d(NN_HIDDEN_SIZE),
@@ -48,7 +48,7 @@ class LatentCEDisRNNAgent(nn.Module):
 
         # Dis Net
         self.dis_net = nn.Sequential(nn.Linear(args.latent_dim * 2, NN_HIDDEN_SIZE ),
-                                     nn.BatchNorm1d(NN_HIDDEN_SIZE ),
+                                     nn.BatchNorm1d(NN_HIDDEN_SIZE),
                                      activation_func,
                                      nn.Linear(NN_HIDDEN_SIZE , 1))
 
@@ -72,9 +72,6 @@ class LatentCEDisRNNAgent(nn.Module):
 
         var_mean=self.latent[:self.n_agents, self.args.latent_dim:].detach().mean()
 
-        #mask = 1 - th.eye(self.n_agents).byte()
-        #mi=self.mi.view(self.n_agents,self.n_agents).masked_select(mask)
-        #di=self.dissimilarity.view(self.n_agents,self.n_agents).masked_select(mask)
         mi = self.mi
         di = self.dissimilarity
         indicator=[var_mean,mi.max(),mi.min(),mi.mean(),mi.std(),di.max(),di.min(),di.mean(),di.std()]
@@ -88,12 +85,9 @@ class LatentCEDisRNNAgent(nn.Module):
 
         self.latent = self.embed_net(embed_fc_input)
         self.latent[:, -self.latent_dim:] = th.clamp(th.exp(self.latent[:, -self.latent_dim:]), min=self.args.var_floor)  # var
-        #self.latent[:, -self.latent_dim:] = th.full_like(self.latent[:, -self.latent_dim:],1.0)
-
         size = self.latent.shape[0] * self.latent.shape[1] / (self.latent_dim * 2)
         latent_embed = self.latent.reshape(int(size), self.latent_dim * 2)
 
-        #latent = latent_embed[:, :self.latent_dim]
         gaussian_embed = D.Normal(latent_embed[:, :self.latent_dim], (latent_embed[:, self.latent_dim:]) ** (1 / 2))
         latent = gaussian_embed.rsample()
 
@@ -102,18 +96,13 @@ class LatentCEDisRNNAgent(nn.Module):
         loss = th.tensor(0.0).to(self.args.device)
 
         if train_mode and (not self.args.roma_raw):
-            #gaussian_embed = D.Normal(latent_embed[:, :self.latent_dim], (latent_embed[:, self.latent_dim:]) ** (1 / 2))
-            #latent = gaussian_embed.rsample()
-
             self.latent_infer = self.inference_net(th.cat([h_in.detach(), inputs], dim=1))
             self.latent_infer[:, -self.latent_dim:] = th.clamp(th.exp(self.latent_infer[:, -self.latent_dim:]),min=self.args.var_floor)
-            #self.latent_infer[:, -self.latent_dim:] = th.full_like(self.latent_infer[:, -self.latent_dim:],1.0)
             gaussian_infer = D.Normal(self.latent_infer[:, :self.latent_dim], (self.latent_infer[:, self.latent_dim:]) ** (1 / 2))
             latent_infer = gaussian_infer.rsample()
 
             loss = gaussian_embed.entropy().sum(dim=-1).mean() * self.args.h_loss_weight + kl_divergence(gaussian_embed, gaussian_infer).sum(dim=-1).mean() * self.args.kl_loss_weight   # CE = H + KL
             loss = th.clamp(loss, max=2e3)
-            # loss = loss / (self.bs * self.n_agents)
             ce_loss = th.log(1 + th.exp(loss))
 
             # Dis Loss
@@ -129,7 +118,6 @@ class LatentCEDisRNNAgent(nn.Module):
                         [latent_move[:, -1, :].unsqueeze(1), latent_move[:, :-1, :]], dim=1)
                     latent_dis_pair = th.cat([latent_dis[:, :, :self.latent_dim],
                                               latent_move[:, :, :self.latent_dim],
-                                            # (latent_dis[:, :, :self.latent_dim]-latent_move[:, :, :self.latent_dim])**2
                                               ], dim=2)
                     mi = th.clamp(gaussian_embed.log_prob(latent_move.view(self.bs * self.n_agents, -1))+13.9, min=-13.9).sum(dim=1,keepdim=True) / self.latent_dim
 
@@ -144,10 +132,8 @@ class LatentCEDisRNNAgent(nn.Module):
                     else:
                         mi_cat = th.cat([mi_cat,mi.view(self.bs,-1)],dim=1)
 
-                    #dis_loss -= th.clamp(mi / 100 + dissimilarity, max=0.18).sum() / self.bs / self.n_agents
-
-                mi_min=mi_cat.min(dim=1,keepdim=True)[0]
-                mi_max=mi_cat.max(dim=1,keepdim=True)[0]
+                mi_min=mi_cat.min(dim=1, keepdim=True)[0]
+                mi_max=mi_cat.max(dim=1, keepdim=True)[0]
                 di_min = dissimilarity_cat.min(dim=1, keepdim=True)[0]
                 di_max = dissimilarity_cat.max(dim=1, keepdim=True)[0]
 
@@ -155,10 +141,8 @@ class LatentCEDisRNNAgent(nn.Module):
                 dissimilarity_cat=(dissimilarity_cat-di_min)/(di_max-di_min+ 1e-12 )
 
                 dis_loss = - th.clamp(mi_cat+dissimilarity_cat, max=1.0).sum()/self.bs/self.n_agents
-                #dis_loss = ((mi_cat + dissimilarity_cat - 1.0 )**2).sum() / self.bs / self.n_agents
                 dis_norm = th.norm(dissimilarity_cat, p=1, dim=1).sum() / self.bs / self.n_agents
 
-                #c_dis_loss = (dis_loss + dis_norm) / self.n_agents * cur_dis_loss_weight
                 c_dis_loss = (dis_norm + self.args.soft_constraint_weight * dis_loss) / self.n_agents * cur_dis_loss_weight
                 loss = ce_loss +  c_dis_loss
 

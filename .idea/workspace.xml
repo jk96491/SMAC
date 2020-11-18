@@ -22,7 +22,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="D:/Krafton/StoryGAN-master/code" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -138,42 +138,61 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1575" height="466" key="DebuggerActiveHint" timestamp="1605064233036">
+    <state width="1575" height="466" key="DebuggerActiveHint" timestamp="1605664314779">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1575" height="466" key="DebuggerActiveHint/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605064233036" />
-    <state x="688" y="137" key="FileChooserDialogImpl" timestamp="1603948619521">
+    <state width="1575" height="466" key="DebuggerActiveHint/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605664314779" />
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1605594701925">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1602847012567" />
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605594701925" />
     <state x="688" y="137" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1603948619521" />
-    <state width="1899" height="291" key="GridCell.Tab.0.bottom" timestamp="1605064349643">
+    <state width="1899" height="282" key="GridCell.Tab.0.bottom" timestamp="1605664529264">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="291" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605064349643" />
-    <state width="1899" height="291" key="GridCell.Tab.0.center" timestamp="1605064349642">
+    <state width="1899" height="282" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605664529264" />
+    <state width="1899" height="282" key="GridCell.Tab.0.center" timestamp="1605664529264">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="291" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605064349642" />
-    <state width="1899" height="291" key="GridCell.Tab.0.left" timestamp="1605064349641">
+    <state width="1899" height="282" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605664529264" />
+    <state width="1899" height="282" key="GridCell.Tab.0.left" timestamp="1605664529264">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="291" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605064349641" />
-    <state width="1899" height="291" key="GridCell.Tab.0.right" timestamp="1605064349643">
+    <state width="1899" height="282" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605664529264" />
+    <state width="1899" height="282" key="GridCell.Tab.0.right" timestamp="1605664529264">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="291" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605064349643" />
+    <state width="1899" height="282" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605664529264" />
     <state x="461" y="162" key="SettingsEditor" timestamp="1602845850059">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="162" key="SettingsEditor/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1602845850059" />
-    <state x="1920" y="64" width="1590" height="717" maximized="true" key="dock-window-1" timestamp="1605062552203">
-      <screen x="1920" y="0" width="1920" height="1040" />
-    </state>
-    <state x="1920" y="64" width="1590" height="717" maximized="true" key="dock-window-1/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605062552203" />
-    <state x="653" y="251" width="613" height="538" key="find.popup" timestamp="1603510752891">
+    <state width="968" height="528" key="XDebugger.FullValuePopup" timestamp="1605660969881">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="653" y="251" width="613" height="538" key="find.popup/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1603510752891" />
+    <state width="968" height="528" key="XDebugger.FullValuePopup/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605660969881" />
+    <state x="1920" y="23" width="1590" height="745" maximized="true" key="dock-window-1" timestamp="1605662871722">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1920" y="23" width="1590" height="745" maximized="true" key="dock-window-1/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605662871722" />
+    <state x="1920" y="144" width="1590" height="745" key="dock-window-2" timestamp="1605664407703">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1920" y="144" width="1590" height="745" key="dock-window-2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605664407703" />
+    <state x="653" y="251" width="613" height="538" key="find.popup" timestamp="1605662908048">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="653" y="251" width="613" height="538" key="find.popup/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605662908048" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
