@@ -1,4 +1,49 @@
-# StarCraft II Multi Agent Challenge
+# (KOR)StarCraft II Multi Agent Challenge 
+
+## **제공하는 멀티 에이전트 강화학습 모델들 _QMIX, COMA, LIIR, G2ANet, QTRAN, VDN, Central V, IQL, ROMA and RODE_ .**
+
+본 저장소는 Windows OS에서 편리하게 실행시키기 위해 만들어짐.
+
+<img src="https://user-images.githubusercontent.com/17878413/97562077-72142600-1a24-11eb-962c-39df6423ced4.png" width="30%"></img>
+
+<img src="https://user-images.githubusercontent.com/17878413/97562396-e8b12380-1a24-11eb-92ba-c9a05ec3630b.png" width="30%"></img>
+
+<img src="https://user-images.githubusercontent.com/17878413/97562276-b69fc180-1a24-11eb-997c-e5feeff6a30b.png" width="30%"></img>
+
+첫번째로 StarCraft 2을 설치 해야 합니다. 체험판도 상관없습니다. 아래 링크에서 받으세요
+ 
+ ```shell
+https://starcraft2.com/ko-kr/
+```
+
+설치 후 미니게임을 위한 맵을 아래 링크에서 다운로드 받아야 합니다.
+
+ ```shell
+https://github.com/oxwhirl/smac/tree/master/smac/env/starcraft2/maps/SMAC_Maps
+```
+
+다운 받은 맵들을 아래 경로에 이동시키면 됩니다.
+
+ ```shell
+C:\Program Files (x86)\StarCraft II\Maps\SMAC_Maps
+```
+
+# 이제 부터는 환경 설정 입니다.
+Enter the following command to install the packages you need first.
+필요한 패키지들을 설치하기 위하여 아래대로 명령을 입력하세요
+ ```shell
+pip install -r requirements.txt
+```
+Unfortunately, you need to install the one below yourself (it is not difficult).
+불행이도 한가지는 직접 설치해야 합니다.(어렵지 않습니다.)
+
+pytorch만 아래와 같이 직접 설치해 주세요\
+ ```shell
+conda install pytorch==1.2.0 torchvision==0.4.0 -c pytorch
+```
+마지막으로 "main.py"을 실행 시키면 됩니다.
+
+# (ENG)StarCraft II Multi Agent Challenge 
 
 ## **The algorithms provided are _QMIX, COMA, LIIR, G2ANet, QTRAN, VDN, Central V, IQL, ROMA and RODE_ .**
 
