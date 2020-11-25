@@ -29,12 +29,10 @@ C:\Program Files (x86)\StarCraft II\Maps\SMAC_Maps
 ```
 
 # 이제 부터는 환경 설정 입니다.
-Enter the following command to install the packages you need first.
 필요한 패키지들을 설치하기 위하여 아래대로 명령을 입력하세요
  ```shell
 pip install -r requirements.txt
 ```
-Unfortunately, you need to install the one below yourself (it is not difficult).
 불행이도 한가지는 직접 설치해야 합니다.(어렵지 않습니다.)
 
 pytorch만 아래와 같이 직접 설치해 주세요\
