@@ -2,9 +2,9 @@ from modules.critics.CentralV import CentralV_Critic
 import torch
 from torch.optim import RMSprop
 from components.episode_buffer import EpisodeBatch
-from utils.rl_utils import build_td_lambda_targets
 
-class CentralV:
+
+class CentralV_Learner:
     def __init__(self, mac, scheme, logger, args):
         self.n_actions = args.n_actions
         self.n_actions = args.n_actions
@@ -29,10 +29,6 @@ class CentralV:
 
         self.critic_optimizer = RMSprop(self.critic_parameters, lr=args.critic_lr)
         self.agent_optimiser = RMSprop(self.rnn_parameters, lr=args.lr)
-
-
-
-        self.eval_hidden = None
 
 
     def train(self, batch: EpisodeBatch, t_env: int, episode_num: int):
