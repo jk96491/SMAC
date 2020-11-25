@@ -9,14 +9,15 @@ role_epsilon_finish: 0.05
 epsilon_anneal_time: 70000
 epsilon_anneal_time_exp: 70000
 
-runner: "parallel_V2"
+runner: "episode_V2"
 
-batch_size_run: 4
+#batch_size_run: 4
 
 buffer_size: 5000
 
 # update the target network every {} episodes
-target_update_interval: 200
+#target_update_interval: 200
+target_update_interval: 10
 
 # use the Q_Learner to train
 agent_output_type: "q"
@@ -40,6 +41,7 @@ role_interval: 5
 state_latent_dim: 32
 action_latent_dim: 20
 role_action_spaces_update_start: 50000
+
 
 # for interpretability
 verbose: False

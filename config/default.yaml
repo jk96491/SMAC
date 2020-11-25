@@ -13,14 +13,14 @@ log_interval: 2000 # Log summary of stats after every {} timesteps
 runner_log_interval: 2000 # Log runner stats (not test stats) every {} timesteps
 learner_log_interval: 2000 # Log training stats every {} timesteps
 t_max: 10000 # Stop running after this many timesteps
-use_cuda: True # Use gpu by default unless it isn't available
+use_cuda: False # Use gpu by default unless it isn't available
 buffer_cpu_only: True # If true we won't keep all of the replay buffer in vram
 
 # --- Logging options ---
 use_tensorboard: True # Log results to tensorboard
 save_model: True # Save the models to disk
 save_model_interval: 200000 # Save models after this many timesteps
-#checkpoint_path: "C:/Users/JGY/Desktop/SMAC/trunk/results/models/qmix_smac_latent_parallel__2020-11-11_13-32-39" # Load a checkpoint from this path
+#checkpoint_path: "C:/Users/JGY/Desktop/SMAC/trunk/results/models/rode__2020-11-19_16-03-48" # Load a checkpoint from this path
 checkpoint_path: ""
 evaluate: False # Evaluate model for test_nepisode episodes and quit (no training)
 load_step: 0 # Load model trained on this many timesteps (0 if choose max possible)

@@ -7,7 +7,8 @@ epsilon_finish: 0.05
 epsilon_anneal_time: 50000
 
 runner: "parallel"
-batch_size_run: 8
+batch_size_run: 6
+batch_size : 6
 
 buffer_size: 5000
 
@@ -19,6 +20,10 @@ agent_output_type: "q"
 learner: "q_learner"
 double_q: True
 mixer: "qmix"
+
 mixing_embed_dim: 32
+hypernet_layers: 2
+hypernet_embed: 64
+
 
 name: "qmix_smac_parallel"
