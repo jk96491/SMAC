@@ -45,8 +45,8 @@ class CentralV_Learner:
 
         mask = mask.repeat(1, 1, self.n_agents)
 
-        td_error, critic_train_stats = self._train_critic(batch, rewards, terminated, actions, avail_actions,
-                                                        critic_mask, bs, max_t)
+        td_error, critic_train_stats = self._train_critic(batch, rewards,
+                                                        mask)
 
         actions = actions[:, :-1]
 
@@ -87,7 +87,7 @@ class CentralV_Learner:
             self.logger.log_stat("agent_grad_norm", grad_norm, t_env)
             self.log_stats_t = t_env
 
-    def _train_critic(self, batch, rewards, terminated, actions, avail_actions, mask, bs, max_t):
+    def _train_critic(self, batch, rewards, mask):
         r, terminated = batch['reward'][:, :-1], batch['terminated'][:, :-1].type(torch.FloatTensor)
         v_evals, v_targets = [], []
         for t in reversed(range(rewards.size(1))):
