@@ -1,6 +1,6 @@
 # StarCraft II Multi Agent Challenge
 
-## **The algorithms provided are _ QMIX, COMA, LIIR, QTRAN, VDN, Central V, IQL, ROAM and RODE_ .**
+## **The algorithms provided are _QMIX, COMA, LIIR, QTRAN, VDN, Central V, IQL, ROAM and RODE_ .**
 
 This repository has been edited for convenient execution in Windows OS.
 
