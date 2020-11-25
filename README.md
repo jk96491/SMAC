@@ -1,4 +1,7 @@
 # StarCraft II Multi Agent Challenge
+
+**The algorithms provided are qmix, coma, liir.**
+
 This repository has been edited for convenient execution in Windows OS.
 
 <img src="https://user-images.githubusercontent.com/17878413/97562077-72142600-1a24-11eb-962c-39df6423ced4.png" width="30%"></img>
