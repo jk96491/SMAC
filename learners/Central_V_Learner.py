@@ -30,18 +30,13 @@ class CentralV_Learner:
         self.critic_optimizer = RMSprop(self.critic_parameters, lr=args.critic_lr)
         self.agent_optimiser = RMSprop(self.rnn_parameters, lr=args.lr)
 
-
     def train(self, batch: EpisodeBatch, t_env: int, episode_num: int):
-        bs = batch.batch_size
-        max_t = batch.max_seq_length
         rewards = batch["reward"][:, :-1]
         actions = batch["actions"][:, :]
         terminated = batch["terminated"][:, :-1].float()
         mask = batch["filled"][:, :-1].float()
         mask[:, 1:] = mask[:, 1:] * (1 - terminated[:, :-1])
         avail_actions = batch["avail_actions"][:, :-1]
-
-        critic_mask = mask.clone()
 
         mask = mask.repeat(1, 1, self.n_agents)
 
