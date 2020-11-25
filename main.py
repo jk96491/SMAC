@@ -7,8 +7,8 @@ import config_util as cu
 
 '''
 algorithm 설정 가이드(config/algs 경로의 파일이름 그대로)
-만일 QMIX 를 실행하고 싶다면 -> 'qmix_beta'
-만일 COMA 를 실행하고 싶다면 -> 'coma'
+만일 rnn agent의 QMIX 를 실행하고 싶다면 -> 'RNN_AGENT/qmix_beta'
+만일 G2ANet agent COMA 를 실행하고 싶다면 -> 'G2ANet/coma'
 
 minigame 설정 가이드
 마린 3 vs 마린 3 -> '3m'
@@ -18,8 +18,8 @@ minigame 설정 가이드
 
 if __name__ == '__main__':
     logger = get_logger()
-    algorithm = 'rode'
-    minigame = '2s3z'
+    algorithm = 'RNN_AGENT/Central_V'
+    minigame = '3m'
 
     config = cu.config_copy(cu.get_config(algorithm, minigame))
 

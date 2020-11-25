@@ -1,0 +1,32 @@
+# --- Central V specific parameters ---
+
+action_selector: "multinomial"
+epsilon_start: .5
+epsilon_finish: .01
+epsilon_anneal_time: 100000
+mask_before_softmax: False
+
+runner: "parallel"
+
+buffer_size: 4
+batch_size_run: 4
+batch_size: 4
+
+env_args:
+  state_last_action: True
+
+# update the target network every {} training steps
+target_update_interval: 200
+
+lr: 0.0005
+critic_lr: 0.0005
+td_lambda: 0.8
+
+# use COMA
+agent_output_type: "pi_logits"
+learner: "centralV"
+
+name: "centralV"
+
+agent: "rnn"
+

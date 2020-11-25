@@ -6,11 +6,7 @@ epsilon_finish: .01
 epsilon_anneal_time: 100000
 mask_before_softmax: False
 
-runner: "parallel"
-
-buffer_size: 4
-batch_size_run: 4
-batch_size: 4
+runner: "episode"
 
 env_args:
   state_last_action: True
@@ -27,3 +23,9 @@ agent_output_type: "pi_logits"
 learner: "centralV"
 
 name: "centralV"
+
+agent: "G2ANet"
+
+rnn_hidden_dim: 64
+
+hard: true
