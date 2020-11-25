@@ -36,11 +36,7 @@ pip install -r requirements.txt
 ```
 Unfortunately, you need to install the two below yourself (it is not difficult).
 
-You need to install cloudpickle.
- ```shell
-pip install cloudpickle
-```
-You also need to install pytorch.
+You just need to install pytorch.
  ```shell
 conda install pytorch==1.2.0 torchvision==0.4.0 -c pytorch
 ```
