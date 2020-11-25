@@ -10,7 +10,7 @@ algorithm 설정 가이드(config/algs 경로의 파일이름 그대로)
 만일 rnn agent의 QMIX 를 실행하고 싶다면 -> 'RNN_AGENT/qmix_beta'
 만일 G2ANet agent COMA 를 실행하고 싶다면 -> 'G2ANet/coma'
 
-minigame 설정 가이드
+mini game 설정 가이드
 마린 3 vs 마린 3 -> '3m'
 마린 8 vs 마린 3 -> '8m'
 질럿2 추적자 3 vs 질럿2 추적자 3 -> '2s3z'
