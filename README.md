@@ -34,7 +34,7 @@ Enter the following command to install the packages you need first.
  ```shell
 pip install -r requirements.txt
 ```
-Unfortunately, you need to install the two below yourself (it is not difficult).
+Unfortunately, you need to install the one below yourself (it is not difficult).
 
 You just need to install pytorch.
  ```shell
