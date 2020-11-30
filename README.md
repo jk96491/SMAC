@@ -1,6 +1,6 @@
 # (KOR)StarCraft II Multi Agent Challenge 
 
-## **제공하는 멀티 에이전트 강화학습 모델들 _QMIX, COMA, LIIR, G2ANet, QTRAN, VDN,0 Central V, IQL, MAVEN, ROMA and RODE_ .**
+## **제공하는 멀티 에이전트 강화학습 모델들 _QMIX, COMA, LIIR, G2ANet, QTRAN, VDN, Central V, IQL, MAVEN, ROMA and RODE_ .**
 
 본 저장소는 Windows OS에서 편리하게 실행시키기 위해 만들어짐.
 
