@@ -78,8 +78,6 @@ class G2ANet(nn.Module):
 
         else:
             hard_weights = torch.ones((self.args.n_agents, size // self.args.n_agents, 1, self.args.n_agents - 1))
-            if self.args.cuda:
-                hard_weights = hard_weights.cuda()
 
         # Soft Attention
         q = self.q(h_out).reshape(-1, self.args.n_agents,

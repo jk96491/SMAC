@@ -46,3 +46,23 @@ obs_last_action: True # Include the agent's last action (one_hot) in the observa
 # --- Experiment running params ---
 repeat_id: 1
 label: "default_label"
+
+
+# --- Noise parameters ---
+mi_loss: 0.1
+noise_dim: 1
+noise_embedding_dim: 32
+noise_bandit: False
+
+mi_intrinsic: False
+mi_scaler: 0.1
+hard_qs: False
+
+bandit_epsilon: 0.1
+bandit_iters: 8
+bandit_batch: 64
+bandit_buffer: 512
+bandit_reward_scaling: 20
+bandit_use_state: True
+bandit_policy: True
+

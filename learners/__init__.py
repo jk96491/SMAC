@@ -5,6 +5,7 @@ from .LIIR_Learner import LIIRLearner
 from .latent_q_learner import LatentQLearner
 from .rode_learner import RODELearner
 from .Central_V_Learner import CentralV_Learner
+from .noise_q_learner import NoiseQLearner
 
 REGISTRY = {}
 
@@ -15,3 +16,4 @@ REGISTRY["liir_learner"] = LIIRLearner
 REGISTRY['latent_q_learner'] = LatentQLearner
 REGISTRY['rode_learner'] = RODELearner
 REGISTRY['centralV'] = CentralV_Learner
+REGISTRY["noise_q_learner"] = NoiseQLearner

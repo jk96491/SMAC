@@ -1,0 +1,36 @@
+# --- QMIX specific parameters ---
+
+# use epsilon greedy action selector
+action_selector: "epsilon_greedy"
+epsilon_start: 1.0
+epsilon_finish: 0.05
+epsilon_anneal_time: 50000
+
+runner: "parallel"
+batch_size_run: 44
+
+buffer_size: 5000
+# pc mode buffer_size: 500
+
+# update the target network every {} episodes
+target_update_interval: 200
+
+# use the Q_Learner to train
+agent_output_type: "q"
+learner: "noise_q_learner"
+double_q: True
+mixer: "qmix"
+mixing_embed_dim: 32
+skip_connections: False
+hyper_initialization_nonzeros: 0
+
+mac: "noise_mac"
+agent: "noise_rnn"
+noise_dim: 2
+
+mi_loss: 1
+
+discrim_size: 32
+discrim_layers: 1
+
+name: "noisemix"

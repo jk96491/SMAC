@@ -75,8 +75,7 @@ class RODEMAC:
         agent_outs = th.gather(roles_q, 1, self.selected_roles.unsqueeze(-1).unsqueeze(-1).repeat(1, 1, self.n_actions))
         # [bs * n_agents, 1, n_actions]
 
-        return agent_outs.view(ep_batch.batch_size, self.n_agents, -1), \
-            (None if role_outputs is None else role_outputs.view(ep_batch.batch_size, self.n_agents, -1))
+        return agent_outs.view(ep_batch.batch_size, self.n_agents, -1), (None if role_outputs is None else role_outputs.view(ep_batch.batch_size, self.n_agents, -1))
 
     def init_hidden(self, batch_size):
         self.hidden_states = self.agent.init_hidden().unsqueeze(0).expand(batch_size, self.n_agents, -1)  # bav

@@ -52,7 +52,7 @@ class LatentCEDisRNNAgent(nn.Module):
                                      activation_func,
                                      nn.Linear(NN_HIDDEN_SIZE , 1))
 
-        self.mi= th.rand(args.n_agents*args.n_agents)
+        self.mi = th.rand(args.n_agents*args.n_agents)
         self.dissimilarity = th.rand(args.n_agents*args.n_agents)
 
         if args.dis_sigmoid:

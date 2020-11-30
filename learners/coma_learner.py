@@ -13,7 +13,6 @@ class COMALearner:
         self.n_actions = args.n_actions
         self.mac = mac
         self.logger = logger
-
         self.last_target_update_step = 0
         self.critic_training_steps = 0
 

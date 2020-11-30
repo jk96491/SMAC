@@ -9,11 +9,11 @@ enum34==1.1.6
 future==0.16.0
 idna==2.7
 imageio==2.4.1
-jsonpickle==0.9.6
+jsonpickle==0.9.6딥런이
 kiwisolver==1.0.1
-matplotlib==3.0.0
+matplotlib==3.0.0멀티에이전트
 mock==2.0.0
-more-itertools==4.3.0
+more-itertools==4.3.0강화학습MARL
 mpyq==0.2.5
 munch==2.3.2
 numpy==1.15.2
