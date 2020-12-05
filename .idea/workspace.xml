@@ -23,7 +23,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/MAVEN-master/maven_code/src" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../CMS_EDU/trunk" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -165,10 +165,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1669" height="466" key="DebuggerActiveHint/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606375730484" />
-    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1606704834477">
+    <state x="740" y="275" key="FileChooserDialogImpl" timestamp="1606715119323">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606704834477" />
+    <state x="740" y="275" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606715119323" />
     <state x="688" y="137" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1603948619521" />
     <state width="1899" height="279" key="GridCell.Tab.0.bottom" timestamp="1606712866018">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -202,10 +202,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="820" y="127" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606272517862" />
-    <state x="1920" y="0" width="1590" height="1027" maximized="true" key="dock-window-1" timestamp="1606278176648">
+    <state x="1920" y="0" width="1590" height="1027" maximized="true" key="dock-window-1" timestamp="1606714936321">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
-    <state x="1920" y="0" width="1590" height="1027" maximized="true" key="dock-window-1/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606278176648" />
+    <state x="1920" y="0" width="1590" height="1027" maximized="true" key="dock-window-1/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606714936321" />
     <state x="1920" y="1" width="1590" height="743" key="dock-window-2" timestamp="1606356323537">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
@@ -219,10 +219,10 @@
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="1920" y="40" width="1590" height="745" maximized="true" key="dock-window-4/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1605769340771" />
-    <state x="653" y="251" width="1124" height="538" key="find.popup" timestamp="1606277033522">
+    <state x="653" y="251" width="1124" height="538" key="find.popup" timestamp="1606824070802">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="653" y="251" width="1124" height="538" key="find.popup/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606277033522" />
+    <state x="653" y="251" width="1124" height="538" key="find.popup/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1606824070802" />
     <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1606268875352">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
