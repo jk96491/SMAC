@@ -19,9 +19,10 @@ mini game 설정 가이드
 
 if __name__ == '__main__':
     logger = get_logger()
-   # algorithm = 'Role_Learning_Agent/rode'
-    algorithm = 'MAVEN/noisemix_smac'
-    minigame = '3m'
+    algorithm = 'RNN_AGENT/qmix_beta'
+    #algorithm = 'Role_Learning_Agent/rode'
+    #algorithm = 'RNN_AGENT/noisemix_smac'
+    minigame = '1c3s5z'
 
     config = cu.config_copy(cu.get_config(algorithm, minigame))
 
