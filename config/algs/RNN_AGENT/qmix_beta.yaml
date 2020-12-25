@@ -27,3 +27,5 @@ hypernet_embed: 64
 
 
 name: "qmix_smac_parallel"
+
+device_num: 0

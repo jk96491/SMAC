@@ -16,8 +16,7 @@ runner: "episode_V2"
 buffer_size: 5000
 
 # update the target network every {} episodes
-#target_update_interval: 200
-target_update_interval: 10
+target_update_interval: 200
 
 # use the Q_Learner to train
 agent_output_type: "q"
@@ -45,3 +44,5 @@ role_action_spaces_update_start: 50000
 
 # for interpretability
 verbose: False
+
+device_num: 0

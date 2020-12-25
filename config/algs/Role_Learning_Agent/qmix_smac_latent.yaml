@@ -7,7 +7,7 @@ epsilon_finish: 0.05
 epsilon_anneal_time: 50
 
 runner: "parallel"
-batch_size_run: 4
+batch_size_run: 1
 
 buffer_size: 5000
 
@@ -43,6 +43,6 @@ dis_sigmoid: False
 
 use_tensorboard: True
 save_model: True
-use_cuda: False
+use_cuda: True
 device_num: 0
 save_replay: False
