@@ -17,13 +17,16 @@ mini game 설정 가이드
 질럿2 추적자 3 vs 질럿2 추적자 3 -> '2s3z'
 '''
 
+
 if __name__ == '__main__':
     logger = get_logger()
-    #algorithm = 'RNN_AGENT/qmix_beta'
-    algorithm = 'Role_Learning_Agent/rode'
+    algorithm = 'RNN_AGENT/coma'
+    #algorithm = 'Role_Learning_Agent/rode'
     #algorithm = 'Role_Learning_Agent/qmix_smac_latent'
     #algorithm = 'RNN_AGENT/noisemix_smac'
-    minigame = '2s3z'
+    # algorithm = 'RNN_AGENT/noisemix_smac'
+    # algorithm = 'RNN_AGENT/noisemix_smac'
+    minigame = '5m_vs_6m'
 
     config = cu.config_copy(cu.get_config(algorithm, minigame))
 
