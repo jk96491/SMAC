@@ -847,11 +847,13 @@ class StarCraft2Env(MultiAgentEnv):
         ]
         return vals
 
+    # 특정 Agent 'i'의 부분 관측 정보를 가져온다.
     def get_obs_agent(self, agent_id):
         """Returns observation for agent_id.
         NOTE: Agents should have access only to their local observations
         during decentralised execution.
         """
+
         unit = self.get_unit_by_id(agent_id)
 
         nf_al = 4 + self.unit_type_bits
@@ -882,9 +884,11 @@ class StarCraft2Env(MultiAgentEnv):
         if unit.health > 0:  # otherwise dead, return all zeros
             x = unit.pos.x
             y = unit.pos.y
+
+            # 시야범위
             sight_range = self.unit_sight_range(agent_id)
 
-            # Movement features
+            # 움직임이 가능한 방향을 가져온다 (동, 서 ,남 ,북)
             avail_actions = self.get_avail_agent_actions(agent_id)
             for m in range(self.n_actions_move):
                 move_feats[m] = avail_actions[m + 2]
@@ -900,12 +904,13 @@ class StarCraft2Env(MultiAgentEnv):
             if self.obs_terrain_height:
                 move_feats[ind:] = self.get_surrounding_height(unit)
 
-            # Enemy features
+            # 적군 정보들
             for e_id, e_unit in self.enemies.items():
                 e_x = e_unit.pos.x
                 e_y = e_unit.pos.y
                 dist = self.distance(x, y, e_x, e_y)
 
+                # 자신의 시야 범위 안에 들어와야 정보를 저장한다.
                 if (
                     dist < sight_range and e_unit.health > 0
                 ):  # visible and alive
@@ -1020,6 +1025,7 @@ class StarCraft2Env(MultiAgentEnv):
 
         return agent_obs
 
+    # agent 모두의 부분 관측 정보를 가져온다.
     def get_obs(self):
         """Returns all agent observations in a list.
         NOTE: Agents should have access only to their local observations
@@ -1028,6 +1034,7 @@ class StarCraft2Env(MultiAgentEnv):
         agents_obs = [self.get_obs_agent(i) for i in range(self.n_agents)]
         return agents_obs
 
+    # state 정보를 가져온다.
     def get_state(self):
         """Returns the global state.
         NOTE: This functon should not be used during decentralised execution.
@@ -1047,15 +1054,19 @@ class StarCraft2Env(MultiAgentEnv):
         center_x = self.map_x / 2
         center_y = self.map_y / 2
 
+        # 아군의 정보
         for al_id, al_unit in self.agents.items():
             if al_unit.health > 0:
                 x = al_unit.pos.x
                 y = al_unit.pos.y
-                max_cd = self.unit_max_cooldown(al_unit)
+                max_cd = self.unit_max_cooldown(al_unit)    # 유닛별 쿨타임 가져 오기
 
+                # 체력
                 ally_state[al_id, 0] = (
                     al_unit.health / al_unit.health_max
-                )  # health
+                )
+
+                # 쿨타임
                 if (
                     self.map_type == "MMM"
                     and al_unit.unit_type == self.medivac_id
@@ -1064,34 +1075,43 @@ class StarCraft2Env(MultiAgentEnv):
                 else:
                     ally_state[al_id, 1] = (
                         al_unit.weapon_cooldown / max_cd
-                    )  # cooldown
+                    )
+
+                # 정규화된 좌표 정보보
                 ally_state[al_id, 2] = (
-                    x - center_x
+                   x - center_x
                 ) / self.max_distance_x  # relative X
                 ally_state[al_id, 3] = (
                     y - center_y
                 ) / self.max_distance_y  # relative Y
 
                 ind = 4
+
+                # 보호막 정보(프로토스 한정, 만일 다른 종족이면 0 으로 세팅)
                 if self.shield_bits_ally > 0:
                     max_shield = self.unit_max_shield(al_unit)
                     ally_state[al_id, ind] = (
                         al_unit.shield / max_shield
-                    )  # shield
+                    )
                     ind += 1
 
+                # 유닛 종류 정보
                 if self.unit_type_bits > 0:
                     type_id = self.get_unit_type_id(al_unit, True)
                     ally_state[al_id, ind + type_id] = 1
 
+        # 적군의 정보
         for e_id, e_unit in self.enemies.items():
             if e_unit.health > 0:
                 x = e_unit.pos.x
                 y = e_unit.pos.y
 
+                # 적군의 체력
                 enemy_state[e_id, 0] = (
                     e_unit.health / e_unit.health_max
-                )  # health
+                )
+
+                # 적군의 정규화된 좌표
                 enemy_state[e_id, 1] = (
                     x - center_x
                 ) / self.max_distance_x  # relative X
@@ -1100,6 +1120,8 @@ class StarCraft2Env(MultiAgentEnv):
                 ) / self.max_distance_y  # relative Y
 
                 ind = 3
+
+                # 보호막 정보(프로토스 한정, 만일 다른 종족이면 0 으로 세팅)
                 if self.shield_bits_enemy > 0:
                     max_shield = self.unit_max_shield(e_unit)
 
@@ -1112,6 +1134,7 @@ class StarCraft2Env(MultiAgentEnv):
 
                     ind += 1
 
+                # 유닛 종류 정보
                 if self.unit_type_bits > 0:
                     type_id = self.get_unit_type_id(e_unit, False)
                     enemy_state[e_id, ind + type_id] = 1
