@@ -51,7 +51,7 @@ class RODELearner:
         self.role_interval = args.role_interval
         self.device = self.args.device
 
-        self.role_action_spaces_updated = True
+        self.role_action_spaces_updated = False
 
         # action encoder
         self.action_encoder_params = list(self.mac.action_encoder_params())
@@ -192,6 +192,7 @@ class RODELearner:
         pred_obs_loss = None
         pred_r_loss = None
         pred_grad_norm = None
+
         if self.role_action_spaces_updated:
             # train action encoder
             no_pred = []
@@ -215,6 +216,7 @@ class RODELearner:
             self.action_encoder_optimiser.step()
 
             if t_env > self.args.role_action_spaces_update_start:
+            #if t_env > 50:
                 self.mac.update_role_action_spaces()
                 if 'noar' in self.args.mac:
                     self.target_mac.role_selector.update_roles(self.mac.n_roles)

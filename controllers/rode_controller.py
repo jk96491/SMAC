@@ -37,6 +37,8 @@ class RODEMAC:
         self.role_latent = th.ones(self.n_roles, self.args.action_latent_dim).to(args.device)
         self.action_repr = th.ones(self.n_actions, self.args.action_latent_dim).to(args.device)
 
+        self.update_role_action_spaces()
+
     def select_actions(self, ep_batch, t_ep, t_env, bs=slice(None), test_mode=False):
         # Only select actions for the selected batch elements in bs
         avail_actions = ep_batch["avail_actions"][:, t_ep]
@@ -185,14 +187,13 @@ class RODEMAC:
         return input_shape
 
     def update_role_action_spaces(self):
-        action_repr = self.action_encoder()
+        action_repr, spaces = self.action_repr_by_human()
         action_repr_array = action_repr.detach().cpu().numpy()  # [n_actions, action_latent_d]
 
         k_means = KMeans(n_clusters=self.n_clusters, random_state=0).fit(action_repr_array)
 
-        spaces = []
-        for cluster_i in range(self.n_clusters):
-            spaces.append((k_means.labels_ == cluster_i).astype(np.float))
+        #for cluster_i in range(self.n_clusters):
+        #    spaces.append((k_means.labels_ == cluster_i).astype(np.float))
 
         o_spaces = copy.deepcopy(spaces)
         spaces = []
@@ -243,3 +244,68 @@ class RODEMAC:
 
     def action_repr_forward(self, ep_batch, t):
         return self.action_encoder.predict(ep_batch["obs"][:, t], ep_batch["actions_onehot"][:, t])
+
+    def action_repr_by_human(self):
+        action_repr_list = []
+        spaces = []
+
+        mini_game = self.args.env_args["map_name"]
+
+        if mini_game == "2s3z":
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0, 0]))
+
+            # 이동
+            action_repr_list.append(th.FloatTensor([1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 ,0 ,0, 0, 0]))
+
+            # 질럿 공격(근거리 공격)
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0 ,0 ,0, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0 ,0 ,0, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0 ,0 ,0, 0, 0]))
+
+            # 추적자 공격
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1 ,1 ,1, 1, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ,1 ,1, 1, 1]))
+
+            spaces.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+            spaces.append(np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0]))  # 이동만 하는 Role
+            spaces.append(np.array([1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0]))  # 질럿만 공격하는 Role
+            spaces.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]))  # 추적자만 공격하는 Role
+
+        elif mini_game == "1c3s5z":
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]))
+
+            # 이동
+            action_repr_list.append(th.FloatTensor([1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+
+            # 대장 공격
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+
+            # 추적자 공격 및 대장 공격 (원거리)
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0]))
+
+            # 질럿 공격(근거리 공격)
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0]))
+            action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0]))
+
+            spaces.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+            spaces.append(np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+            spaces.append(np.array([1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0]))
+            spaces.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]))
+
+
+        action_repr = th.stack(action_repr_list, dim=0)
+
+        return action_repr, spaces
