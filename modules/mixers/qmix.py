@@ -58,3 +58,23 @@ class QMixer(nn.Module):
         # Reshape and return
         q_tot = y.view(bs, -1, 1)
         return q_tot
+
+    def k(self, states):
+        bs = states.size(0)
+        w1 = th.abs(self.hyper_w_1(states))
+        w_final = th.abs(self.hyper_w_final(states))
+        w1 = w1.view(-1, self.n_agents, self.embed_dim)
+        w_final = w_final.view(-1, self.embed_dim, 1)
+        k = th.bmm(w1, w_final).view(bs, -1, self.n_agents)
+        k = k / th.sum(k, dim=2, keepdim=True)
+        return k
+
+    def b(self, states):
+        bs = states.size(0)
+        w_final = th.abs(self.hyper_w_final(states))
+        w_final = w_final.view(-1, self.embed_dim, 1)
+        b1 = self.hyper_b_1(states)
+        b1 = b1.view(-1, 1, self.embed_dim)
+        v = self.V(states).view(-1, 1, 1)
+        b = th.bmm(b1, w_final) + v
+        return b

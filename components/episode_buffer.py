@@ -240,9 +240,85 @@ class ReplayBuffer(EpisodeBatch):
             ep_ids = np.random.choice(self.episodes_in_buffer, batch_size, replace=False)
             return self[ep_ids]
 
+    def uni_sample(self, batch_size):
+        assert self.can_sample(batch_size)
+        if self.episodes_in_buffer == batch_size:
+            return self[:batch_size]
+        else:
+            # Uniform sampling only atm
+            ep_ids = np.random.choice(self.episodes_in_buffer, batch_size, replace=False)
+            return self[ep_ids]
+
+    def sample_latest(self, batch_size):
+        assert self.can_sample(batch_size)
+        if self.buffer_index - batch_size < 0:
+            # Uniform sampling
+            return self.uni_sample(batch_size)
+        else:
+            # Return the latest
+            return self[self.buffer_index - batch_size: self.buffer_index]
+
     def __repr__(self):
         return "ReplayBuffer. {}/{} episodes. Keys:{} Groups:{}".format(self.episodes_in_buffer,
                                                                         self.buffer_size,
                                                                         self.scheme.keys(),
                                                                         self.groups.keys())
+
+
+
+class Best_experience_Buffer(EpisodeBatch):
+    def __init__(self, scheme, groups, buffer_size, max_seq_length, preprocess=None, device="cpu"):
+        super(Best_experience_Buffer, self).__init__(scheme, groups, buffer_size, max_seq_length, preprocess=preprocess, device=device)
+        self.buffer_size = buffer_size
+        self.episodes_in_buffer = 0
+        self.tot_rs = [0.0 for _ in range(buffer_size)]
+
+    def insert_episode_batch(self, ep_batch):
+        for i in range(ep_batch.batch_size):
+            self.insert_episode(ep_batch[i:i+1])
+
+    def insert_episode(self, ep):
+        if self.episodes_in_buffer < self.buffer_size:
+            tot_r = th.sum(ep['reward'], dim=1).item()
+            self.tot_rs[self.episodes_in_buffer] = tot_r
+            self.update(ep.data.transition_data,
+                        slice(self.episodes_in_buffer, self.episodes_in_buffer + 1),
+                        slice(0, ep.max_seq_length),
+                        mark_filled=False)
+            self.update(ep.data.episode_data,
+                        slice(self.episodes_in_buffer, self.episodes_in_buffer + 1))
+            self.episodes_in_buffer += 1
+        else:
+            tot_r = th.sum(ep['reward'], dim=1).item()
+            if tot_r >= min(self.tot_rs):
+                index = np.argmin(self.tot_rs)
+                self.update(ep.data.transition_data,
+                            slice(index, index + 1),
+                            slice(0, ep.max_seq_length),
+                            mark_filled=False)
+                self.update(ep.data.episode_data,
+                            slice(index, index + 1))
+                self.tot_rs[index] = tot_r
+
+    def can_sample(self, batch_size):
+        return self.episodes_in_buffer >= batch_size
+
+    def uni_sample(self, batch_size):
+        assert self.can_sample(batch_size)
+        if self.episodes_in_buffer == batch_size:
+            return self[:batch_size]
+        else:
+            # Uniform sampling only atm
+            ep_ids = np.random.choice(self.episodes_in_buffer, batch_size, replace=False)
+            return self[ep_ids]
+
+    def weighted_sample(self, batch_size):
+        assert self.can_sample(batch_size)
+        if self.episodes_in_buffer < self.buffer_size:
+            return self[:batch_size]
+        else:
+            # weighted by the tot_r subject to linear transform
+            p = np.array(self.tot_rs) - min(self.tot_rs) + 1.0
+            ep_ids = np.random.choice(self.episodes_in_buffer, batch_size, replace=False, p=(p / np.sum(p)))
+            return self[ep_ids]
 

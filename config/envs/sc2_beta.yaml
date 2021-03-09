@@ -37,3 +37,4 @@ t_max: 10050000
 test_interval: 20000
 test_nepisode: 24
 test_greedy: True
+off_pg: False

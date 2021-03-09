@@ -2,7 +2,8 @@ import numpy as np
 import torch as th
 from utils.logging import get_logger
 import random
-from run import run
+from run import standard_run
+from offpg_run import offpg_run
 import config_util as cu
 
 '''
@@ -20,13 +21,14 @@ mini game 설정 가이드
 
 if __name__ == '__main__':
     logger = get_logger()
-    algorithm = 'RNN_AGENT/coma'
+    #algorithm = 'RNN_AGENT/coma'
+    algorithm = 'RNN_AGENT/offpg_smac'
     #algorithm = 'Role_Learning_Agent/rode'
-    #algorithm = 'Role_Learning_Agent/qmix_smac_latent'
-    #algorithm = 'RNN_AGENT/noisemix_smac'
+   # algorithm = 'Role_Learning_Agent/qmix_smac_latent'
     # algorithm = 'RNN_AGENT/noisemix_smac'
     # algorithm = 'RNN_AGENT/noisemix_smac'
-    minigame = '5m_vs_6m'
+    # algorithm = 'RNN_AGENT/noisemix_smac'
+    minigame = '2s3z'
 
     config = cu.config_copy(cu.get_config(algorithm, minigame))
 
@@ -36,4 +38,9 @@ if __name__ == '__main__':
     th.manual_seed(random_Seed)
     config['env_args']['seed'] = random_Seed
 
-    run(config, logger, minigame)
+    is_offpg = config['off_pg']
+
+    if is_offpg:
+        offpg_run(config, logger, minigame)
+    else:
+        standard_run(config, logger, minigame)
