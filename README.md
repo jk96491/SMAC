@@ -43,7 +43,7 @@ conda install pytorch==1.2.0 torchvision==0.4.0 -c pytorch
 
 # (ENG)StarCraft II Multi Agent Challenge 
 
-## **The algorithms provided are _QMIX, COMA, LIIR, G2ANet, QTRAN, VDN, Central V, IQL, ROMA and RODE_ .**
+## **The algorithms provided are _QMIX, COMA, LIIR, G2ANet, QTRAN, VDN, Central V, IQL, ROMA, RODE and DOP .**
 
 This repository has been edited for convenient execution in Windows OS.
 
