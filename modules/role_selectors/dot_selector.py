@@ -31,12 +31,17 @@ class DotSelector(nn.Module):
         role_q = th.bmm(role_latent_reshaped, x).squeeze()
         return role_q
 
-    def select_role(self, role_qs, test_mode=False, t_env=None):
+    def select_role(self, role_qs, hp, test_mode=False, t_env=None):
+        alpha = 0.7
         self.epsilon = self.epsilon_schedule(t_env)
+
+        role_qs = F.softmax(role_qs)
+        human_roleQ = self.calc_roleQ_by_human(hp)
 
         if test_mode:
             # Greedy action selection only
             self.epsilon = 0.0
+            role_qs = alpha * role_qs + human_roleQ * (1 - alpha)
 
         # mask actions that are excluded from selection
         masked_q_values = role_qs.detach().clone()
@@ -48,6 +53,24 @@ class DotSelector(nn.Module):
         picked_roles = pick_random * random_roles + (1 - pick_random) * masked_q_values.max(dim=1)[1]
         # [bs, 1]
         return picked_roles
+
+    def calc_roleQ_by_human(self, hp):
+        human_roleQ = []
+        for index1 in range(len(hp)):
+            for index2 in range(len(hp[index1])):
+                cur_hp = hp[index1, index2]
+
+                if cur_hp >= 0.7:
+                    human_roleQ.append(th.FloatTensor([0, 0, 0, 0.5, 0.5]))
+                elif cur_hp < 0.7 and cur_hp >= 0.2:
+                    human_roleQ.append(th.FloatTensor([0, 0.5, 0.5, 0, 0]))
+                else:
+                    human_roleQ.append(th.FloatTensor([0.2, 0.2, 0.2, 0.2, 0.2]))
+
+        human_roleQ = th.stack(human_roleQ, dim=0)
+
+        return human_roleQ
+
 
     def epsilon_schedule(self, t_env):
         if t_env is None:

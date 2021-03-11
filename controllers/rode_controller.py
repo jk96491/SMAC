@@ -8,6 +8,7 @@ import torch as th
 from sklearn.cluster import KMeans
 import numpy as np
 import copy
+from utils.get_hp import get_HP
 
 
 # This multi-agent controller shares parameters between agents
@@ -59,12 +60,14 @@ class RODEMAC:
     def forward(self, ep_batch, t, test_mode=False, t_env=None):
         agent_inputs = self._build_inputs(ep_batch, t)
 
+        hp = get_HP(self.args, ep_batch["obs"][:, t])
+
         # select roles
         self.role_hidden_states = self.role_agent(agent_inputs, self.role_hidden_states)
         role_outputs = None
         if t % self.role_interval == 0:
             role_outputs = self.role_selector(self.role_hidden_states, self.role_latent)
-            self.selected_roles = self.role_selector.select_role(role_outputs, test_mode=test_mode, t_env=t_env).squeeze()
+            self.selected_roles = self.role_selector.select_role(role_outputs, hp, test_mode=test_mode, t_env=t_env).squeeze()
             # [bs * n_agents]
 
         # compute individual q-values
@@ -188,33 +191,16 @@ class RODEMAC:
 
     def update_role_action_spaces(self):
         action_repr, spaces = self.action_repr_by_human()
+        #action_repr = self.action_encoder()
         action_repr_array = action_repr.detach().cpu().numpy()  # [n_actions, action_latent_d]
 
-        k_means = KMeans(n_clusters=self.n_clusters, random_state=0).fit(action_repr_array)
+       # k_means = KMeans(n_clusters=self.n_clusters, random_state=0).fit(action_repr_array)
 
+        #spaces = []
         #for cluster_i in range(self.n_clusters):
         #    spaces.append((k_means.labels_ == cluster_i).astype(np.float))
 
-        o_spaces = copy.deepcopy(spaces)
-        spaces = []
 
-        for space_i ,space in enumerate(o_spaces):
-            _space = copy.deepcopy(space)
-            _space[0] = 0.
-            _space[1] = 0.
-
-            if _space.sum() == 2.:
-                spaces.append(o_spaces[space_i])
-            if _space.sum() >= 3:
-                _space[:6] = 1.
-                spaces.append(_space)
-
-        for space in spaces:
-            space[0] = 1.
-
-        if len(spaces) < 3:
-            spaces.append(spaces[0])
-            spaces.append(spaces[1])
 
         print('>>> Role Action Spaces', spaces)
 
@@ -270,8 +256,10 @@ class RODEMAC:
             action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1 ,1 ,1, 1, 0]))
             action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ,1 ,1, 1, 1]))
 
-            spaces.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+            #spaces.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
             spaces.append(np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0]))  # 이동만 하는 Role
+            spaces.append(np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0]))  # 이동 및 질럿만 공격하는 Role
+            spaces.append(np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1]))  # 이동 및 질럿만 공격하는 Role
             spaces.append(np.array([1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0]))  # 질럿만 공격하는 Role
             spaces.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]))  # 추적자만 공격하는 Role
 
@@ -293,7 +281,7 @@ class RODEMAC:
             action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0]))
             action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0]))
 
-            # 질럿 공격(근거리 공격)
+            # 질럿 공격(근거리 공격)0
             action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0]))
             action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0]))
             action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0]))
