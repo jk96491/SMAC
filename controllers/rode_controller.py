@@ -257,10 +257,8 @@ class RODEMAC:
             action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ,1 ,1, 1, 1]))
 
             #spaces.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-            spaces.append(np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0]))  # 이동만 하는 Role
             spaces.append(np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0]))  # 이동 및 질럿만 공격하는 Role
             spaces.append(np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1]))  # 이동 및 질럿만 공격하는 Role
-            spaces.append(np.array([1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0]))  # 질럿만 공격하는 Role
             spaces.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1]))  # 추적자만 공격하는 Role
 
         elif mini_game == "1c3s5z":
