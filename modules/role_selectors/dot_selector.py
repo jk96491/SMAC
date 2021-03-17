@@ -60,12 +60,14 @@ class DotSelector(nn.Module):
             for index2 in range(len(hp[index1])):
                 cur_hp = hp[index1, index2]
 
-                if cur_hp >= 0.7:
-                    human_roleQ.append(th.FloatTensor([0.1, 0.2, 0.7]))
+                if cur_hp >= 0.85:
+                    human_roleQ.append(th.FloatTensor([0, 0.8, 0.1, 0.1, 0]))
+                elif cur_hp >= 0.7 and cur_hp < 0.85:
+                    human_roleQ.append(th.FloatTensor([0, 0.5, 0.5, 0, 0]))
                 elif cur_hp < 0.7 and cur_hp >= 0.2:
-                    human_roleQ.append(th.FloatTensor([0.4, 0.4, 0.2]))
+                    human_roleQ.append(th.FloatTensor([0.5, 0.2, 0.1, 0.1, 0.1]))
                 else:
-                    human_roleQ.append(th.FloatTensor([0.333333, 0.333333, 0.333333]))
+                    human_roleQ.append(th.FloatTensor([0.6, 0.1, 0.1, 0.1, 0.1]))
 
         human_roleQ = th.stack(human_roleQ, dim=0)
 

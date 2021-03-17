@@ -287,10 +287,10 @@ class RODEMAC:
             action_repr_list.append(th.FloatTensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0]))
 
             spaces.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-            spaces.append(np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-            spaces.append(np.array([1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]))
-            spaces.append(np.array([1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0]))
-            spaces.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]))
+            spaces.append(np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0])) # 이동
+            spaces.append(np.array([1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0])) # 대장공격
+            spaces.append(np.array([1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0])) # 추적자 공격
+            spaces.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1])) # 질럿 공격
 
 
         action_repr = th.stack(action_repr_list, dim=0)
