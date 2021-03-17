@@ -288,6 +288,7 @@ class RODEMAC:
 
             spaces.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
             spaces.append(np.array([1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+            spaces.append(np.array([1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]))
             spaces.append(np.array([1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0]))
             spaces.append(np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]))
 
