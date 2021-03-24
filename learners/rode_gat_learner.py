@@ -2,13 +2,14 @@ import copy
 from components.episode_buffer import EpisodeBatch
 from modules.mixers.vdn import VDNMixer
 from modules.mixers.qmix import QMixer
+from modules.mixers.qmix_gat import QMixer_gat
 import torch as th
 from torch.optim import RMSprop
 
 import numpy as np
 
 
-class RODELearner:
+class RODE_GAT_Learner:
     def __init__(self, mac, scheme, logger, args):
         self.args = args
         self.mac = mac
@@ -35,7 +36,7 @@ class RODELearner:
             if args.role_mixer == "vdn":
                 self.role_mixer = VDNMixer()
             elif args.role_mixer == "qmix":
-                self.role_mixer = QMixer(args)
+                self.role_mixer = QMixer_gat(args)
             else:
                 raise ValueError("Role Mixer {} not recognised.".format(args.role_mixer))
             self.params += list(self.role_mixer.parameters())
@@ -199,6 +200,7 @@ class RODELearner:
             no_pred = []
             r_pred = []
             for t in range(batch.max_seq_length):
+                expected_state, expected_reward = self.role_mixer.train_gat(batch["state"][:, t], batch["actions_onehot"][:, t])
                 no_preds, r_preds = self.mac.action_repr_forward(batch, t=t)
                 no_pred.append(no_preds)
                 r_pred.append(r_preds)
@@ -217,6 +219,7 @@ class RODELearner:
             self.action_encoder_optimiser.step()
 
             if t_env > self.args.role_action_spaces_update_start:
+            #if t_env > 50:
                 self.mac.update_role_action_spaces()
                 if 'noar' in self.args.mac:
                     self.target_mac.role_selector.update_roles(self.mac.n_roles)

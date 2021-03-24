@@ -35,13 +35,13 @@ class DotSelector(nn.Module):
         alpha = 0.7
         self.epsilon = self.epsilon_schedule(t_env)
 
-        role_qs = F.softmax(role_qs)
+        #role_qs = F.softmax(role_qs)
         human_roleQ = self.calc_roleQ_by_human(hp)
 
         if test_mode:
             # Greedy action selection only
             self.epsilon = 0.0
-            role_qs = alpha * role_qs + human_roleQ * (1 - alpha)
+            #role_qs = alpha * role_qs + human_roleQ * (1 - alpha)
 
         # mask actions that are excluded from selection
         masked_q_values = role_qs.detach().clone()

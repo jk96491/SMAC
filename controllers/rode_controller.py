@@ -190,17 +190,36 @@ class RODEMAC:
         return input_shape
 
     def update_role_action_spaces(self):
-        action_repr, spaces = self.action_repr_by_human()
-        #action_repr = self.action_encoder()
+        #action_repr, spaces = self.action_repr_by_human()
+        action_repr = self.action_encoder()
         action_repr_array = action_repr.detach().cpu().numpy()  # [n_actions, action_latent_d]
 
-       # k_means = KMeans(n_clusters=self.n_clusters, random_state=0).fit(action_repr_array)
+        k_means = KMeans(n_clusters=self.n_clusters, random_state=0).fit(action_repr_array)
 
-        #spaces = []
-        #for cluster_i in range(self.n_clusters):
-        #    spaces.append((k_means.labels_ == cluster_i).astype(np.float))
+        spaces = []
+        for cluster_i in range(self.n_clusters):
+            spaces.append((k_means.labels_ == cluster_i).astype(np.float))
 
+        o_spaces = copy.deepcopy(spaces)
+        spaces = []
 
+        for space_i, space in enumerate(o_spaces):
+            _space = copy.deepcopy(space)
+            _space[0] = 0.
+            _space[1] = 0.
+
+            if _space.sum() == 2.:
+                spaces.append(o_spaces[space_i])
+            if _space.sum() >= 3:
+                _space[:6] = 1.
+                spaces.append(_space)
+
+        for space in spaces:
+            space[0] = 1.
+
+        if len(spaces) < 3:
+            spaces.append(spaces[0])
+            spaces.append(spaces[1])
 
         print('>>> Role Action Spaces', spaces)
 
