@@ -27,6 +27,8 @@ class G2ANet(nn.Module):
         self.k = nn.Linear(self.rnn_hidden_dim, self.attention_dim, bias=False)
         self.v = nn.Linear(self.rnn_hidden_dim, self.attention_dim)
 
+        self.device = 'cuda:{0}'.format(self.args.device_num) if torch.cuda.is_available() else 'cpu'
+
         # Decoding
         self.decoding = nn.Linear(self.rnn_hidden_dim + self.attention_dim, args.n_actions)
         self.args = args
@@ -40,7 +42,7 @@ class G2ANet(nn.Module):
         size = obs.shape[0]
 
         obs_encoding = f.relu(self.encoding(obs))
-        h_in = hidden_state.reshape(-1, self.args.rnn_hidden_dim)
+        h_in = hidden_state.reshape(-1, self.args.rnn_hidden_dim).to(self.device)
 
         h_out = self.h(obs_encoding, h_in)
 
@@ -63,7 +65,7 @@ class G2ANet(nn.Module):
 
             input_hard = input_hard.view(self.args.n_agents - 1, -1, self.args.rnn_hidden_dim * 2)
 
-            h_hard = torch.zeros((2 * 1, size, self.args.rnn_hidden_dim))
+            h_hard = torch.zeros((2 * 1, size, self.args.rnn_hidden_dim)).to(self.device)
 
             h_hard, _ = self.hard_bi_GRU(input_hard, h_hard)  # (n_agents - 1,batch_size * n_agents,rnn_hidden_dim * 2)
             h_hard = h_hard.permute(1, 0, 2)  # (batch_size * n_agents, n_agents - 1, rnn_hidden_dim * 2)
