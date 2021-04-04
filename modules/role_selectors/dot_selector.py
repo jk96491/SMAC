@@ -36,7 +36,7 @@ class DotSelector(nn.Module):
         self.epsilon = self.epsilon_schedule(t_env)
 
         #role_qs = F.softmax(role_qs)
-        human_roleQ = self.calc_roleQ_by_human(hp)
+        human_roleQ = self.calc_roleQ_by_human(hp).to(self.args.device)
 
         if test_mode:
             # Greedy action selection only

@@ -83,7 +83,7 @@ class QMixer_gat(nn.Module):
     def gat_forward(self, state):
         batch_size = state.shape[0]
         gat_states = []
-        adj = th.ones( self.n_agents * 2, self.n_agents * 2)
+        adj = th.ones( self.n_agents * 2, self.n_agents * 2).to(self.args.device)
 
         for i in range(batch_size):
             cur_state = state[i].view(self.n_agents * 2, self.feature_dim)
