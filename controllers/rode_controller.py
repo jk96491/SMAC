@@ -38,8 +38,6 @@ class RODEMAC:
         self.role_latent = th.ones(self.n_roles, self.args.action_latent_dim).to(args.device)
         self.action_repr = th.ones(self.n_actions, self.args.action_latent_dim).to(args.device)
 
-        self.update_role_action_spaces()
-
     def select_actions(self, ep_batch, t_ep, t_env, bs=slice(None), test_mode=False):
         # Only select actions for the selected batch elements in bs
         avail_actions = ep_batch["avail_actions"][:, t_ep]
@@ -239,6 +237,7 @@ class RODEMAC:
         #     del self.roles[self.n_roles]
 
         self.role_action_spaces = th.Tensor(np.array(spaces)).to(self.args.device).float()  # [n_roles, n_actions]
+        action_repr = action_repr.to(self.args.device)
         self.role_latent = th.matmul(self.role_action_spaces, action_repr) / self.role_action_spaces.sum(dim=-1,
                                                                                                          keepdim=True)
         self.role_latent = self.role_latent.detach().clone()
