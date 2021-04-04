@@ -55,7 +55,7 @@ class BasicMAC:
 
     def init_hidden(self, batch_size):
         if self.args.agent == "G2ANet":
-            self.hidden_states = self.agent.init_hidden()
+            self.hidden_states = self.agent.init_hidden().expand(batch_size, self.n_agents, -1)
         else:
             self.hidden_states = self.agent.init_hidden().unsqueeze(0).expand(batch_size, self.n_agents, -1)  # bav
 
