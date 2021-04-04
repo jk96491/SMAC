@@ -32,3 +32,5 @@ agent: "G2ANet"
 rnn_hidden_dim: 64
 
 hard: true
+
+device_num: 0
