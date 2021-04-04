@@ -45,6 +45,9 @@ class EpisodeRunner:
         self.env.reset()
         self.t = 0
 
+    def set_learner(self, learner):
+        return
+
     def run(self, test_mode=False):
         self.reset()
 

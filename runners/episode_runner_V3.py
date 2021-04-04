@@ -10,7 +10,7 @@ import shutil
 import copy
 
 
-class EpisodeRunnerV2:
+class EpisodeRunnerV3:
 
     def __init__(self, args, logger):
         self.args = args
@@ -23,6 +23,8 @@ class EpisodeRunnerV2:
         self.t = 0
 
         self.t_env = 0
+
+        self.learner = None
 
         self.train_returns = []
         self.test_returns = []
@@ -37,7 +39,14 @@ class EpisodeRunnerV2:
     def setup(self, scheme, groups, preprocess, mac):
         self.new_batch = partial(EpisodeBatch, scheme, groups, self.batch_size, self.episode_limit + 1,
                                  preprocess=preprocess, device=self.args.device)
+
+        self.new_batch_role = partial(EpisodeBatch, scheme, groups, self.batch_size, 5,
+                                 preprocess=preprocess, device=self.args.device)
+
         self.mac = mac
+
+    def set_learner(self, learner):
+        self.learner = learner
 
     def get_env_info(self):
         return self.env.get_env_info()
@@ -48,11 +57,9 @@ class EpisodeRunnerV2:
     def close_env(self):
         self.env.close()
 
-    def set_learner(self, learner):
-        return
-
     def reset(self):
         self.batch = self.new_batch()
+        self.batch_role = self.new_batch_role()
         self.env.reset()
         self.t = 0
 
@@ -78,6 +85,8 @@ class EpisodeRunnerV2:
                 logging.getLogger('matplotlib.font_manager').disabled = True
             all_roles = []
 
+        time_step = 0
+
         while not terminated:
 
             pre_transition_data = {
@@ -92,12 +101,14 @@ class EpisodeRunnerV2:
                 replay_data.append([ally_info, enemy_info])
 
             self.batch.update(pre_transition_data, ts=self.t)
+            self.batch_role.update(pre_transition_data, ts=time_step)
 
             # Pass the entire batch of experiences up till now to the agents
             # Receive the actions for each agent at this timestep in a batch of size 1
             actions, roles, role_avail_actions = self.mac.select_actions(self.batch, t_ep=self.t,
                                                                          t_env=self.t_env, test_mode=test_mode)
             self.batch.update({"role_avail_actions": role_avail_actions.tolist()}, ts=self.t)
+            self.batch_role.update({"role_avail_actions": role_avail_actions.tolist()}, ts=time_step)
 
             if self.verbose:
                 roles_detach = roles.detach().cpu().squeeze().numpy()
@@ -151,8 +162,16 @@ class EpisodeRunnerV2:
             }
 
             self.batch.update(post_transition_data, ts=self.t)
+            self.batch_role.update(post_transition_data, ts=time_step)
 
             self.t += 1
+            time_step += 1
+
+            if time_step % 5 == 0 and time_step is not 0:
+                if self.learner is not None:
+                    self.learner.train_role_selector(self.batch_role, self.batch_size, 5)
+                    self.batch_role = self.new_batch_role()
+                    time_step = 0
 
         last_data = {
             "state": [self.env.get_state()],

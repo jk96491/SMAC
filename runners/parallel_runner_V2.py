@@ -54,6 +54,9 @@ class ParallelRunnerV2:
     def save_replay(self):
         pass
 
+    def set_learner(self, learner):
+        return
+
     def close_env(self):
         for parent_conn in self.parent_conns:
             parent_conn.send(("close", None))

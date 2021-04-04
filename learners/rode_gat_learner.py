@@ -39,10 +39,11 @@ class RODE_GAT_Learner:
                 self.role_mixer = QMixer_gat(args)
             else:
                 raise ValueError("Role Mixer {} not recognised.".format(args.role_mixer))
-            self.params += list(self.role_mixer.parameters())
+            #self.params += list(self.role_mixer.parameters())
             self.target_role_mixer = copy.deepcopy(self.role_mixer)
 
         self.optimiser = RMSprop(params=self.params, lr=args.lr, alpha=args.optim_alpha, eps=args.optim_eps)
+        self.optimiser_gat = RMSprop(params=self.role_mixer.parameters(), lr=args.lr, alpha=args.optim_alpha, eps=args.optim_eps)
 
         # a little wasteful to deepcopy (e.g. duplicates action selector), but should work for any MAC
         self.target_mac = copy.deepcopy(mac)
@@ -76,7 +77,6 @@ class RODE_GAT_Learner:
         roles_shape[1] = role_t
         roles = th.zeros(roles_shape).to(self.device)
         roles[:, :roles_shape_o[1]] = batch["roles"][:, :-1]
-        roles = roles.view(batch.batch_size, role_at, self.role_interval, self.n_agents, -1)[:, :, 0]
 
         # Calculate estimated Q-Values
         mac_out = []
@@ -92,7 +92,6 @@ class RODE_GAT_Learner:
 
         # Pick the Q-Values for the actions taken by each agent
         chosen_action_qvals = th.gather(mac_out[:, :-1], dim=3, index=actions).squeeze(3)  # Remove the last dim
-        chosen_role_qvals = th.gather(role_out, dim=3, index=roles.long()).squeeze(3)
 
         # Calculate the Q-Values necessary for the target
         target_mac_out = []
@@ -107,7 +106,6 @@ class RODE_GAT_Learner:
         target_role_out.append(th.zeros(batch.batch_size, self.n_agents, self.mac.n_roles).to(self.device))
         # We don't need the first timesteps Q-Value estimate for calculating targets
         target_mac_out = th.stack(target_mac_out[1:], dim=1)  # Concat across time
-        target_role_out = th.stack(target_role_out[1:], dim=1)
 
         # Mask out unavailable actions
         target_mac_out[avail_actions[:, 1:] == 0] = -9999999
@@ -125,10 +123,8 @@ class RODE_GAT_Learner:
             role_out_detach = role_out.clone().detach()
             role_out_detach = th.cat([role_out_detach[:, 1:], role_out_detach[:, 0:1]], dim=1)
             cur_max_roles = role_out_detach.max(dim=3, keepdim=True)[1]
-            target_role_max_qvals = th.gather(target_role_out, 3, cur_max_roles).squeeze(3)
         else:
             target_max_qvals = target_mac_out.max(dim=3)[0]
-            target_role_max_qvals = target_role_out.max(dim=3)[0]
 
         # Mix
         if self.mixer is not None:
@@ -142,47 +138,30 @@ class RODE_GAT_Learner:
             role_states[:, :state_shape_o[1]] = batch["state"][:, :-1].detach().clone()
             role_states = role_states.view(batch.batch_size, role_at,
                                            self.role_interval, -1)[:, :, 0]
-            chosen_role_qvals = self.role_mixer(chosen_role_qvals, role_states)
-            role_states = th.cat([role_states[:, 1:], role_states[:, 0:1]], dim=1)
-            target_role_max_qvals = self.target_role_mixer(target_role_max_qvals, role_states)
 
         # Calculate 1-step Q-Learning targets
         targets = rewards + self.args.gamma * (1 - terminated) * target_max_qvals
         rewards_shape = list(rewards.shape)
         rewards_shape[1] = role_t
-        role_rewards = th.zeros(rewards_shape).to(self.device)
-        role_rewards[:, :rewards.shape[1]] = rewards.detach().clone()
-        role_rewards = role_rewards.view(batch.batch_size, role_at,
-                                         self.role_interval).sum(dim=-1, keepdim=True)
+
         # role_terminated
         terminated_shape_o = terminated.shape
         terminated_shape = list(terminated_shape_o)
         terminated_shape[1] = role_t
-        role_terminated = th.zeros(terminated_shape).to(self.device)
-        role_terminated[:, :terminated_shape_o[1]] = terminated.detach().clone()
-        role_terminated = role_terminated.view(batch.batch_size, role_at, self.role_interval).sum(dim=-1, keepdim=True)
         # role_terminated
-        role_targets = role_rewards + self.args.gamma * (1 - role_terminated) * target_role_max_qvals
 
         # Td-error
         td_error = (chosen_action_qvals - targets.detach())
-        role_td_error = (chosen_role_qvals - role_targets.detach())
 
         mask = mask.expand_as(td_error)
         mask_shape = list(mask.shape)
         mask_shape[1] = role_t
-        role_mask = th.zeros(mask_shape).to(self.device)
-        role_mask[:, :mask.shape[1]] = mask.detach().clone()
-        role_mask = role_mask.view(batch.batch_size, role_at, self.role_interval, -1)[:, :, 0]
 
         # 0-out the targets that came from padded data
         masked_td_error = td_error * mask
-        masked_role_td_error = role_td_error * role_mask
 
         # Normal L2 loss, take mean over actual data
         loss = (masked_td_error ** 2).sum() / mask.sum()
-        role_loss = (masked_role_td_error ** 2).sum() / role_mask.sum()
-        loss += role_loss
 
         # Optimise
         self.optimiser.zero_grad()
@@ -232,8 +211,6 @@ class RODE_GAT_Learner:
             self.last_target_update_episode = episode_num
 
         if t_env - self.log_stats_t >= self.args.learner_log_interval:
-            self.logger.log_stat("loss", (loss - role_loss).item(), t_env)
-            self.logger.log_stat("role_loss", role_loss.item(), t_env)
             self.logger.log_stat("grad_norm", grad_norm, t_env)
             if pred_obs_loss is not None:
                 self.logger.log_stat("pred_obs_loss", pred_obs_loss.item(), t_env)
@@ -243,11 +220,130 @@ class RODE_GAT_Learner:
             self.logger.log_stat("td_error_abs", (masked_td_error.abs().sum().item() / mask_elems), t_env)
             self.logger.log_stat("q_taken_mean",
                                  (chosen_action_qvals * mask).sum().item() / (mask_elems * self.args.n_agents), t_env)
-            self.logger.log_stat("role_q_taken_mean",
-                                 (chosen_role_qvals * role_mask).sum().item() / (role_mask.sum().item() * self.args.n_agents), t_env)
+
             self.logger.log_stat("target_mean", (targets * mask).sum().item() / (mask_elems * self.args.n_agents),
                                  t_env)
             self.log_stats_t = t_env
+
+
+    def train_role_selector(self, batch: EpisodeBatch, batch_size, max_seq_length):
+        # Get the relevant quantities
+        rewards = batch["reward"][:, :-1]
+        terminated = batch["terminated"][:, :-1].float()
+        mask = batch["filled"][:, :-1].float()
+        mask[:, 1:] = mask[:, 1:] * (1 - terminated[:, :-1])
+        avail_actions = batch["avail_actions"]
+        # role_avail_actions = batch["role_avail_actions"]
+        roles_shape_o = batch["roles"][:, :-1].shape
+        role_at = int(np.ceil(roles_shape_o[1] / self.role_interval))
+        role_t = role_at * self.role_interval
+
+        roles_shape = list(roles_shape_o)
+        roles_shape[1] = role_t
+        roles = th.zeros(roles_shape).to(self.device)
+        roles[:, :roles_shape_o[1]] = batch["roles"][:, :-1]
+        roles = roles.view(batch_size, role_at, self.role_interval, self.n_agents, -1)[:, :, 0]
+
+        # Calculate estimated Q-Values
+        mac_out = []
+        role_out = []
+        self.mac.init_hidden(batch_size)
+        for t in range(max_seq_length):
+            agent_outs, role_outs = self.mac.forward(batch, t=t)
+            mac_out.append(agent_outs)
+            if t % self.role_interval == 0 and t < max_seq_length - 1:
+                role_out.append(role_outs)
+        mac_out = th.stack(mac_out, dim=1)  # Concat over time
+        role_out = th.stack(role_out, dim=1)  # Concat over time
+
+        # Pick the Q-Values for the actions taken by each agent
+        chosen_role_qvals = th.gather(role_out, dim=3, index=roles.long()).squeeze(3)
+
+        # Calculate the Q-Values necessary for the target
+        target_mac_out = []
+        target_role_out = []
+        self.target_mac.init_hidden(batch_size)
+        for t in range(max_seq_length):
+            target_agent_outs, target_role_outs = self.target_mac.forward(batch, t=t)
+            target_mac_out.append(target_agent_outs)
+            if t % self.role_interval == 0 and t < max_seq_length - 1:
+                target_role_out.append(target_role_outs)
+
+        target_role_out.append(th.zeros(batch_size, self.n_agents, self.mac.n_roles).to(self.device))
+        # We don't need the first timesteps Q-Value estimate for calculating targets
+        target_mac_out = th.stack(target_mac_out[1:], dim=1)  # Concat across time
+        target_role_out = th.stack(target_role_out[1:], dim=1)
+
+        # Mask out unavailable actions
+        target_mac_out[avail_actions[:, 1:] == 0] = -9999999
+        # target_mac_out[role_avail_actions[:, 1:] == 0] = -9999999
+
+        # Max over target Q-Values
+        if self.args.double_q:
+            # Get actions that maximise live Q (for double q-learning)
+            mac_out_detach = mac_out.clone().detach()
+            mac_out_detach[avail_actions == 0] = -9999999
+            # mac_out_detach[role_avail_actions == 0] = -9999999
+
+            role_out_detach = role_out.clone().detach()
+            role_out_detach = th.cat([role_out_detach[:, 1:], role_out_detach[:, 0:1]], dim=1)
+            cur_max_roles = role_out_detach.max(dim=3, keepdim=True)[1]
+            target_role_max_qvals = th.gather(target_role_out, 3, cur_max_roles).squeeze(3)
+        else:
+            target_role_max_qvals = target_role_out.max(dim=3)[0]
+
+        # Mix
+        if self.role_mixer is not None:
+            state_shape_o = batch["state"][:, :-1].shape
+            state_shape = list(state_shape_o)
+            state_shape[1] = role_t
+            role_states = th.zeros(state_shape).to(self.device)
+            role_states[:, :state_shape_o[1]] = batch["state"][:, :-1].detach().clone()
+            role_states = role_states.view(batch_size, role_at,
+                                           self.role_interval, -1)[:, :, 0]
+            chosen_role_qvals = self.role_mixer(chosen_role_qvals, role_states)
+            role_states = th.cat([role_states[:, 1:], role_states[:, 0:1]], dim=1)
+            target_role_max_qvals = self.target_role_mixer(target_role_max_qvals, role_states)
+
+        # Calculate 1-step Q-Learning targets
+        rewards_shape = list(rewards.shape)
+        rewards_shape[1] = role_t
+        role_rewards = th.zeros(rewards_shape).to(self.device)
+        role_rewards[:, :rewards.shape[1]] = rewards.detach().clone()
+        role_rewards = role_rewards.view(batch_size, role_at,
+                                         self.role_interval).sum(dim=-1, keepdim=True)
+        # role_terminated
+        terminated_shape_o = terminated.shape
+        terminated_shape = list(terminated_shape_o)
+        terminated_shape[1] = role_t
+        role_terminated = th.zeros(terminated_shape).to(self.device)
+        role_terminated[:, :terminated_shape_o[1]] = terminated.detach().clone()
+        role_terminated = role_terminated.view(batch_size, role_at, self.role_interval).sum(dim=-1, keepdim=True)
+        # role_terminated
+        role_targets = role_rewards + self.args.gamma * (1 - role_terminated) * target_role_max_qvals
+
+        # Td-error
+        role_td_error = (chosen_role_qvals - role_targets.detach())
+
+        mask_shape = list(mask.shape)
+        mask_shape[1] = role_t
+        role_mask = th.zeros(mask_shape).to(self.device)
+        role_mask[:, :mask.shape[1]] = mask.detach().clone()
+        role_mask = role_mask.view(batch_size, role_at, self.role_interval, -1)[:, :, 0]
+
+        # 0-out the targets that came from padded data
+
+        masked_role_td_error = role_td_error * role_mask
+
+        # Normal L2 loss, take mean over actual data
+        role_loss = (masked_role_td_error ** 2).sum() / role_mask.sum()
+        loss = role_loss
+
+        # Optimise
+        self.optimiser_gat.zero_grad()
+        loss.backward()
+        self.optimiser_gat.step()
+
 
     def _update_targets(self):
         self.target_mac.load_state(self.mac)

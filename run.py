@@ -111,11 +111,14 @@ def run_sequential(args, logger):
     # Give runner the scheme
     runner.setup(scheme=scheme, groups=groups, preprocess=preprocess, mac=mac)
 
+
     # Learner
     learner = le_REGISTRY[args.learner](mac, buffer.scheme, logger, args)
 
     if args.use_cuda:
         learner.cuda()
+
+    runner.set_learner(learner)
 
     if args.checkpoint_path != "":
 

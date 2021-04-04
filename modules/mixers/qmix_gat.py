@@ -81,7 +81,7 @@ class QMixer_gat(nn.Module):
         return q_tot
 
     def gat_forward(self, state):
-        batch_size = self.args.batch_size
+        batch_size = state.shape[0]
         gat_states = []
         adj = th.ones( self.n_agents * 2, self.n_agents * 2)
 

@@ -9,7 +9,7 @@ role_epsilon_finish: 0.05
 epsilon_anneal_time: 70000
 epsilon_anneal_time_exp: 70000
 
-runner: "episode_V2"
+runner: "episode_V3"
 
 #batch_size_run: 4
 
