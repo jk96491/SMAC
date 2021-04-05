@@ -1,6 +1,6 @@
 # (KOR)StarCraft II Multi Agent Challenge 
 
-## **제공하는 멀티 에이전트 강화학습 모델들 _QMIX, COMA, LIIR, G2ANet, QTRAN, VDN, Central V, IQL, MAVEN, ROMA, RODE and DOP .**
+## **제공하는 멀티 에이전트 강화학습 모델들 _QMIX, COMA, LIIR, G2ANet, QTRAN, VDN, Central V, IQL, MAVEN, ROMA, RODE, DOP and Graph MIX .**
 
 본 저장소는 Windows OS에서 편리하게 실행시키기 위해 만들어짐.
 
@@ -98,6 +98,7 @@ PyMARL is [WhiRL](http://whirl.cs.ox.ac.uk)'s framework for deep multi-agent rei
 - [**ROMA**: ROMA: Multi-Agent Reinforcement Learning with Emergent Roles](https://arxiv.org/abs/2003.08039)
 - [**RODE**: RODE: Learning Roles to Decompose Multi-Agent Tasks](https://arxiv.org/abs/2010.01523)
 - [**DOP**: DOP: Off-Policy Multi-Agent Decomposed Policy Gradients](https://arxiv.org/abs/2007.12322)
+- [**Graph MIX**: Graph Convolutional Value Decomposition in Multi-Agent Reinforcement Learning](https://arxiv.org/abs/2010.04740)
 
 PyMARL is written in PyTorch and uses [SMAC](https://github.com/oxwhirl/smac) as its environment.
 
