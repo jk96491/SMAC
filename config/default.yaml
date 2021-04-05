@@ -66,3 +66,5 @@ bandit_reward_scaling: 20
 bandit_use_state: True
 bandit_policy: True
 
+device_num: 0
+

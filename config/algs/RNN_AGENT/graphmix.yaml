@@ -17,20 +17,15 @@ target_update_interval: 200
 agent_output_type: "q"
 learner: "q_learner"
 double_q: True
-mixer: "qmix"
-
+mixer: "graphmix"
 mixing_embed_dim: 32
 hypernet_layers: 2
 hypernet_embed: 64
 
+# local loss coefficient
+lambda_local: 1
 
-name: "qmix_smac_G2ANet"
-
-
-agent: "G2ANet"
-
-rnn_hidden_dim: 64
-
-hard: true
+name: "graphmix"
 
 device_num: 0
+
