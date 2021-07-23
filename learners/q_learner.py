@@ -37,7 +37,7 @@ class QLearner:
         self.log_stats_t = -self.args.learner_log_interval - 1
 
     def train(self, batch: EpisodeBatch, t_env: int, episode_num: int):
-        # Get the relevant quantities
+        # 관련된 데이터를 가져온다.
         rewards = batch["reward"][:, :-1]
         actions = batch["actions"][:, :-1]
         terminated = batch["terminated"][:, :-1].float()
@@ -45,7 +45,7 @@ class QLearner:
         mask[:, 1:] = mask[:, 1:] * (1 - terminated[:, :-1])
         avail_actions = batch["avail_actions"]
 
-        # Calculate estimated Q-Values
+        # Agent 개별의 Q값을 산출함
         mac_out = []
         hidden_states = []
         self.mac.init_hidden(batch.batch_size)
@@ -54,13 +54,13 @@ class QLearner:
             mac_out.append(agent_outs)
             hidden_states.append(self.mac.hidden_states.view(batch.batch_size, self.args.n_agents, -1))
 
-        mac_out = th.stack(mac_out, dim=1)  # Concat over time
+        mac_out = th.stack(mac_out, dim=1)  # 시간순에 따라 Concat
         hidden_states = th.stack(hidden_states, dim=1)
 
-        # Pick the Q-Values for the actions taken by each agent
+        # Agent가 선택한 행동의 Q값을 뽑는다.
         chosen_action_qvals = th.gather(mac_out[:, :-1], dim=3, index=actions).squeeze(3)  # Remove the last dim
 
-        # Calculate the Q-Values necessary for the target
+        # Agent Target Network 의 개별 Q값을 산출함
         target_mac_out = []
         target_hidden_states = []
         self.target_mac.init_hidden(batch.batch_size)
@@ -69,19 +69,26 @@ class QLearner:
             target_mac_out.append(target_agent_outs)
             target_hidden_states.append(self.target_mac.hidden_states.view(batch.batch_size, self.args.n_agents, -1))
 
-        # We don't need the first timesteps Q-Value estimate for calculating targets
+        # target network는 next_state 기준 이므로 t=1부터 저장
         target_mac_out = th.stack(target_mac_out[1:], dim=1)  # Concat across time
         target_hidden_states = th.stack(target_hidden_states[1:], dim=1)
 
         # Mask out unavailable actions
         target_mac_out[avail_actions[:, 1:] == 0] = -9999999
 
-        # Max over target Q-Values
         if self.args.double_q:
             # Get actions that maximise live Q (for double q-learning)
+
+            # Agent의 Q값 저장
             mac_out_detach = mac_out.clone().detach()
             mac_out_detach[avail_actions == 0] = -9999999
+
+            # Agent의 next_state 기준의 최대 Q값의 Action 저장
             cur_max_actions = mac_out_detach[:, 1:].max(dim=3, keepdim=True)[1]
+
+            # 이 action 에 대한 Target Network Q값을 저장한다.
+            # 실제 target_mac_out의 최댓값과 다를 수 있음
+            # 실제로 Agent가 선택한 행동의 대한 Q값을 가져오는 셈
             target_max_qvals = th.gather(target_mac_out, 3, cur_max_actions).squeeze(3)
         else:
             target_max_qvals = target_mac_out.max(dim=3)[0]
@@ -92,14 +99,14 @@ class QLearner:
             chosen_action_qvals_peragent = chosen_action_qvals.clone()
             target_max_qvals_peragent = target_max_qvals.detach()
 
-            chosen_action_qvals, local_rewards, alive_agents_mask = self.mixer(chosen_action_qvals,
+            Q_total, local_rewards, alive_agents_mask = self.mixer(chosen_action_qvals,
                                                                                batch["state"][:, :-1],
                                                                                agent_obs=batch["obs"][:, :-1],
                                                                                team_rewards=rewards,
                                                                                hidden_states=hidden_states[:, :-1]
                                                                                )
 
-            target_max_qvals = self.target_mixer(target_max_qvals,
+            target_Q_total = self.target_mixer(target_max_qvals,
                                                  batch["state"][:, 1:],
                                                  agent_obs=batch["obs"][:, 1:],
                                                  hidden_states=target_hidden_states
@@ -107,10 +114,10 @@ class QLearner:
 
             ## Global loss
             # Calculate 1-step Q-Learning targets
-            targets = rewards + self.args.gamma * (1 - terminated) * target_max_qvals
+            targets = rewards + self.args.gamma * (1 - terminated) * target_Q_total
 
             # Td-error
-            td_error = (chosen_action_qvals - targets.detach())
+            td_error = (Q_total - targets.detach())
 
             mask = mask.expand_as(td_error)
 
@@ -142,14 +149,18 @@ class QLearner:
         else:
             # Mix
             if self.mixer is not None:
-                chosen_action_qvals = self.mixer(chosen_action_qvals, batch["state"][:, :-1])
-                target_max_qvals = self.target_mixer(target_max_qvals, batch["state"][:, 1:])
+                # Agent가 선택한 Q값과 state 정보를 넘겨 Q_total, target_Q_total 산출
+                Q_total = self.mixer(chosen_action_qvals, batch["state"][:, :-1])
+                target_Q_total = self.target_mixer(target_max_qvals, batch["state"][:, 1:])
+            else:
+                Q_total = chosen_action_qvals
+                target_Q_total = target_max_qvals
 
-            # Calculate 1-step Q-Learning targets
-            targets = rewards + self.args.gamma * (1 - terminated) * target_max_qvals
+            # 1 step Q 러닝 수행
+            targets = rewards + self.args.gamma * (1 - terminated) * target_Q_total
 
             # Td-error
-            td_error = (chosen_action_qvals - targets.detach())
+            td_error = (Q_total - targets.detach())
 
             mask = mask.expand_as(td_error)
 
@@ -180,7 +191,7 @@ class QLearner:
             mask_elems = mask.sum().item()
             self.logger.log_stat("td_error_abs", (masked_td_error.abs().sum().item() / mask_elems), t_env)
             self.logger.log_stat("q_taken_mean",
-                                 (chosen_action_qvals * mask).sum().item() / (mask_elems * self.args.n_agents), t_env)
+                                 (Q_total * mask).sum().item() / (mask_elems * self.args.n_agents), t_env)
             self.logger.log_stat("target_mean", (targets * mask).sum().item() / (mask_elems * self.args.n_agents),
                                  t_env)
             self.log_stats_t = t_env
